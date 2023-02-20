@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H3AuctionHouse", "H3AuctionHouse\H3AuctionHouse.csproj", "{9EC8C3ED-E0BC-47AA-B02B-A686DF29B9BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionHouseBackend", "AuctionHouseBackend\AuctionHouseBackend.csproj", "{D28C7C63-3D11-4F08-B53E-98B0509288F8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EC8C3ED-E0BC-47AA-B02B-A686DF29B9BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EC8C3ED-E0BC-47AA-B02B-A686DF29B9BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EC8C3ED-E0BC-47AA-B02B-A686DF29B9BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EC8C3ED-E0BC-47AA-B02B-A686DF29B9BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D28C7C63-3D11-4F08-B53E-98B0509288F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D28C7C63-3D11-4F08-B53E-98B0509288F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D28C7C63-3D11-4F08-B53E-98B0509288F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D28C7C63-3D11-4F08-B53E-98B0509288F8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {315A06D3-1073-450F-9ED0-15C69296AE54}
+	EndGlobalSection
+EndGlobal
