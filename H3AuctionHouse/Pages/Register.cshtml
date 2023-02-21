@@ -1,0 +1,35 @@
+﻿@page
+@model H3AuctionHouse.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    if(HttpContext.Session.GetString("username") == null)
+    {
+        <h1>@ViewData["Title"]</h1>
+        <div class="row">
+            <form method="post">
+                <h2>Create an Account</h2>
+                <hr>
+                <div asp-validation-summary="All"></div>
+                <div>
+                    <label asp-for="@Model.Username"></label>
+                    <input asp-for="@Model.Username">
+                    <span asp-validation-for="@Model.Username"></span>
+                </div>
+                <div>
+                    <label asp-for="@Model.Password"></label>
+                    <input asp-for="@Model.Password">
+                    <span asp-validation-for="@Model.Password"></span>
+                </div>
+                <div>
+                    <button type="submit">Log in</button>
+                </div>
+            </form>
+        </div>
+    }
+    else
+    {
+        <p>You are already logged in</p>
+    }
+
+}
+

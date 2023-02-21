@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H3AuctionHouse", "H3AuctionHouse\H3AuctionHouse.csproj", "{9EC8C3ED-E0BC-47AA-B02B-A686DF29B9BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H3AuctionHouse", "H3AuctionHouse\H3AuctionHouse.csproj", "{9EC8C3ED-E0BC-47AA-B02B-A686DF29B9BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionHouseBackend", "AuctionHouseBackend\AuctionHouseBackend.csproj", "{D28C7C63-3D11-4F08-B53E-98B0509288F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionHouseBackend", "AuctionHouseBackend\AuctionHouseBackend.csproj", "{D28C7C63-3D11-4F08-B53E-98B0509288F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
