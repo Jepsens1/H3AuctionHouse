@@ -1,0 +1,34 @@
+USE [master]
+GO
+
+DECLARE @kill varchar(8000) = '' SELECT @kill = @kill + 'kill ' + CONVERT(varchar(5), session_id) + ';'
+FROM sys.dm_exec_sessions 
+WHERE database_id = DB_ID('AuctionHouse') 
+EXEC(@kill) 
+GO
+
+DROP DATABASE IF EXISTS 
+[AuctionHouse] 
+GO 
+
+CREATE DATABASE 
+[AuctionHouse] 
+GO 
+
+USE AuctionHouse 
+GO
+CREATE TABLE Users
+(
+	id int IDENTITY(1,1) PRIMARY KEY,
+	username varchar(255) NOT NULL UNIQUE,
+	firstName varchar(255) NOT NULL,
+	lastName varchar(255) NOT NULL,
+	email varchar(255) NOT NULL UNIQUE,
+);
+
+CREATE TABLE Hashes
+(
+	id int FOREIGN KEY REFERENCES Users(id),
+	hash varchar(2000),
+	salt varchar(2000)
+);
