@@ -1,18 +1,29 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
+using AuctionHouseBackend.Database;
+using AuctionHouseBackend.Managers;
+using System.Security.Cryptography.X509Certificates;
 
 namespace H3AuctionHouse
 {
     public class Program
     {
+        public static LoginManager _manager = new LoginManager(new DatabaseLogin("Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;"));
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
             // Add services to the container.
             builder.Services.AddRazorPages();
-            builder.Services.AddSession();
             builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.Cookie.Name = "AuctionSession";
+            });
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -20,7 +31,7 @@ namespace H3AuctionHouse
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(o =>
             {
-               
+
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
@@ -33,20 +44,11 @@ namespace H3AuctionHouse
                     ValidateIssuerSigningKey = true
                 };
             });
-            
+
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
-            app.UseSession();
-            app.Use(async (context, next) =>
-            {
-                var token = context.Request.Cookies["token"];
-                if (!string.IsNullOrEmpty(token))
-                {
-                    context.Request.Headers.Add("Authorization", "Bearer " + token);
-                }
-                await next();
-            });
+          
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -60,6 +62,16 @@ namespace H3AuctionHouse
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
+            app.Use(async (context, next) =>
+            {
+                var token = context.Request.Cookies["token"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                }
+                await next();
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

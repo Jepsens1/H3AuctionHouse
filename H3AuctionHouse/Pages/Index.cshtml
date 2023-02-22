@@ -2,9 +2,26 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    if (HttpContext.Session.GetString("user") != null)
+    {
+        <form>
+            <p>
+                Item title: <input type="text" name="SearchString">
+                <input type="submit" value="Search" />
+            </p>
+        </form>
+        <div class="text-center">
+            @foreach(int item in Model.Items)
+            {
+                <a asp-page="/ItemDetails" asp-route-id="@item">@item</a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <h1 class="display-4">Welcome</h1>
+            <p>Login or Register to see items on Auction</p>
+        </div>
+    }
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>

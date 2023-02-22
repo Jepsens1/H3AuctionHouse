@@ -1,0 +1,24 @@
+﻿@page
+@model H3AuctionHouse.Pages.AddItemModel
+@{
+    ViewData["Title"] = "Add Item";
+    <h1>@ViewData["Title"]</h1>
+    <div class="row">
+        <form method="post">
+            <h2>Add an item to auction</h2>
+            <hr>
+            <div asp-validation-summary="All"></div>
+            <div>
+                <label asp-for="@Model.ProductName"></label>
+                <input asp-for="@Model.ProductName">
+            </div>
+            <div>
+                <label asp-for="@Model.Description"></label>
+                <input asp-for="@Model.Description">
+            </div>
+            <div>
+                <button type="submit">Create Item</button>
+            </div>
+        </form>
+    </div>
+}
