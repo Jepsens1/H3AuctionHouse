@@ -32,7 +32,7 @@ namespace AuctionHouseBackend.Database
                 CloseConnection();
                 OpenConnection();
                 string query2 = $"INSERT INTO AuctionProducts(productId, productName, productDescription, productStatus, productCategory, expireryTime, expireryDate) VALUES " +
-                    $"({product.Owner.Id}, '{product.Name}', '{product.Description}', {(int)product.Status}, {(int)product.Category}, {product.ExpireryTime.ToShortDateString()}, {product.ExpireryDate.ToShortDateString()})";
+                    $"({product.Owner.Id}, '{product.Name}', '{product.Description}', {(int)product.Status}, {(int)product.Category}, {product.ExpireryDate.ToShortDateString()})";
                 SqlDataCommand = new SqlCommand(query2, SqlConnect);
                 SqlDataCommand.ExecuteScalar();
                 CloseConnection();
@@ -72,7 +72,7 @@ namespace AuctionHouseBackend.Database
                 }
                 UserModel user = new UserModel(highestBidderId);
                 AuctionBidderModel bidder = new AuctionBidderModel(user, price);
-                AuctionProductModel model = new AuctionProductModel(id, name, description, category, status, expTime, expDate, owner);
+                AuctionProductModel model = new AuctionProductModel(id, name, description, category, status, expDate, owner);
                 if (bidder != null )
                 {
                     model.HighestBidder = bidder;
