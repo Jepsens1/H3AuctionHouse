@@ -13,6 +13,11 @@ namespace AuctionHouseBackend.Managers
             this.databaseHandler = databaseHandler;
         }
 
+        public UserModel GetUser(string username)
+        {
+            return databaseHandler.GetUser(username);
+        }
+
         public bool Login(string username, string password)
         {
             UserModel user = ((DatabaseLogin)databaseHandler).Login(username);
