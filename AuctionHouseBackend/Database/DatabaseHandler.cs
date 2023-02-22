@@ -24,18 +24,61 @@ namespace AuctionHouseBackend.Database
 
         protected void OpenConnection()
         {
-            SqlConnect.Open();
+            try
+            {
+                SqlConnect.Open();
+            }
+            catch { }
         }
 
         protected void CloseConnection()
         {
-            SqlConnect.Close();
+            try
+            { 
+                SqlConnect.Close(); 
+            } catch { }
         }
 
-        protected UserModel GetUser(string username)
+        protected int GetPrimaryTableId(string tableName, string idName)
+        {
+            OpenConnection();
+            string query = $"SELECT * FROM {tableName}";
+            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlDataReader = SqlDataCommand.ExecuteReader();
+            int id = -1;
+            if (SqlDataReader.Read())
+            {
+                id = Convert.ToInt32(SqlDataReader[idName]);
+                CloseConnection();
+                return id;
+            }
+            CloseConnection();
+            return id;
+        }
+
+        public UserModel GetUser(string username)
         {
             OpenConnection();
             string query = $"SELECT * FROM Users WHERE username = '{username}'";
+            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlDataReader = SqlDataCommand.ExecuteReader();
+            UserModel user;
+            if (SqlDataReader.Read())
+            {
+                user = new UserModel(SqlDataReader["firstName"].ToString(), SqlDataReader["lastName"].ToString(),
+                    SqlDataReader["username"].ToString(), SqlDataReader["email"].ToString(), "");
+                user.Id = Convert.ToInt32(SqlDataReader["id"]);
+                CloseConnection();
+                return user;
+            }
+            CloseConnection();
+            return null;
+        }
+
+        protected UserModel GetUser(int id)
+        {
+            OpenConnection();
+            string query = $"SELECT * FROM Users WHERE id = '{id}'";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataReader = SqlDataCommand.ExecuteReader();
             UserModel user;

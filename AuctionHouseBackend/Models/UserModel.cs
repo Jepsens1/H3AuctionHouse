@@ -30,5 +30,10 @@
             Username = username;
             Hash = hash;
         }
+
+        public UserModel(int id)
+        {
+            Id = id;
+        }
     }
 }
