@@ -19,21 +19,28 @@ namespace H3AuctionHouse.Pages
         [BindProperty]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        
+
+        public string Errormsg { get; set; }
+
         public void OnGet()
         {
         }
         public IActionResult OnPost()
         {
-            if(Username == "admin" && Password == "admin")
+            if(Program._manager.Login(Username, Password))
             {
-                HttpContext.Session.SetString("username", Username);
+                HttpContext.Session.SetString("user", Username);
                 string token = BuildToken();
-                Response.Cookies.Append("token", token);
-                return RedirectToPage("Welcome");
+                CookieOptions options = new CookieOptions{
+                    Secure = true,
+                    HttpOnly = true,
+                };
+                Response.Cookies.Append("token", token, options);
+                return RedirectToPage("Index");
             }
             else
             {
+                Errormsg = "Wrong username or password";
                 return Page();
             }
         }
@@ -43,7 +50,6 @@ namespace H3AuctionHouse.Pages
             List<Claim> userclaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, Username),
-                new Claim(ClaimTypes.Role, "Admin")
             };
             //useroles needs to be added
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisismySecretKey"));

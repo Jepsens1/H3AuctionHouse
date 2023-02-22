@@ -2,7 +2,7 @@
 @model H3AuctionHouse.Pages.LoginModel
 @{
     ViewData["Title"] = "Login";
-    if (HttpContext.Session.GetString("username") == null)
+    if (HttpContext.Session.GetString("user") == null)
     {
         <h1>@ViewData["Title"]</h1>
         <div class="row">
@@ -13,18 +13,17 @@
             <div>
                 <label asp-for="@Model.Username"></label>
                 <input asp-for="@Model.Username">
-                <span asp-validation-for="@Model.Username"></span>
             </div>
             <div>
                 <label asp-for="@Model.Password"></label>
                 <input asp-for="@Model.Password">
-                <span asp-validation-for="@Model.Password"></span>
             </div>
             <div>
                 <button type="submit">Log in</button>
             </div>
         </form>
         </div>
+        <p>@Model.Errormsg</p>
     }
     else
     {
