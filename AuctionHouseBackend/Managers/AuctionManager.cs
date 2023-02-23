@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace AuctionHouseBackend.Managers
 {
-    internal class AuctionManager
+    public class AuctionManager
     {
+
+        public void BidOnProduct(int productId)
+        {
+
+        }
     }
 }
