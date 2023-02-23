@@ -18,20 +18,20 @@ namespace AuctionHouseBackend.Managers
             return databaseHandler.GetUser(username);
         }
 
-        public bool Login(string username, string password)
+        public UserModel Login(string username, string password)
         {
             UserModel user = ((DatabaseLogin)databaseHandler).Login(username);
             if (user == null)
             {
-                return false;
+                return null;
             }
             if (!CryptoService.VerifyPassword(password, user.Hash.Hash, user.Hash.Salt))
             {
-                return false;
+                return null;
             }
             HashModel newHashSalt = CryptoService.SaltPassword(password);
             ((DatabaseLogin)databaseHandler).UpdateLogin(user.Id, newHashSalt);
-            return true;
+            return user;
         }
 
         public bool CreateAccount(UserModel user)

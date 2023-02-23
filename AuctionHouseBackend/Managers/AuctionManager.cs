@@ -9,9 +9,11 @@ namespace AuctionHouseBackend.Managers
     public class AuctionManager
     {
 
-        public void BidOnProduct(int productId)
+        public void BidOnProduct(int userId, int productId, decimal amount)
         {
 
         }
+
+
     }
 }
