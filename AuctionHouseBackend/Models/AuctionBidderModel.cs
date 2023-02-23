@@ -27,7 +27,7 @@ namespace AuctionHouseBackend.Models
             Price = price;
         }
 
-        private void TriggerOnPriceChanged(bool priceChanged)
+        public void TriggerOnPriceChanged(bool priceChanged)
         {
             OnPriceChanged?.Invoke(this, priceChanged);
         }

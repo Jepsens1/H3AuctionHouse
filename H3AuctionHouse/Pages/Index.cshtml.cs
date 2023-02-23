@@ -25,11 +25,9 @@ namespace H3AuctionHouse.Pages
         }
         public void OnGet()
         {
-            Items = Program._auctionproductmanager.GetAll();
-            if(!string.IsNullOrEmpty(SelectedCategory))
+            if(HttpContext.Session.GetString("user") != null)
             {
-                //Items = Program._auctionproductmanager.
-                //select from db where category
+                Items = Program._auctionproductmanager.GetAll();
             }
         }
     }
