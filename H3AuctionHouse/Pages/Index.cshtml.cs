@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AuctionHouseBackend.Interfaces;
+using AuctionHouseBackend.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace H3AuctionHouse.Pages
 {
@@ -8,27 +11,26 @@ namespace H3AuctionHouse.Pages
     {
         private readonly ILogger<IndexModel> _logger;
 
-        public List<int> Items { get; set; }
+        public List<ProductModel<AuctionProductModel>> Items { get; set; }
+
+        public SelectList Categorys { get; set; } = new SelectList(Enum.GetValues(typeof(Category)).Cast<Category>());
 
         [BindProperty(SupportsGet = true)]
-        public string? SearchString { get; set; }
+        [Required]
+        public string SelectedCategory { get; set; }
+
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
         }
-        public async Task OnGetAsync()
-        {   
-            
-            Items = new List<int>();
-            Items.Add(1);
-            Items.Add(2);
-            Items.Add(3);
-            Items.Add(4);
-            Items.Add(5);
-            Items.Add(6);
-            Items.Add(7);
-            
-            //Items = Program._manager.GetItems()
+        public void OnGet()
+        {
+            Items = Program._auctionproductmanager.GetAll();
+            if(!string.IsNullOrEmpty(SelectedCategory))
+            {
+                //Items = Program._auctionproductmanager.
+                //select from db where category
+            }
         }
     }
 }

@@ -17,8 +17,14 @@
                 <input asp-for="@Model.Description">
             </div>
             <div>
+                <input class="form-control" asp-for="ExpireDate" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                <select asp-for="SelectedCategory" asp-items="Model.Categorys">
+                </select>
+            </div>
+            <div>
                 <button type="submit">Create Item</button>
             </div>
         </form>
+        <p>@Model.Errormsg</p>
     </div>
 }

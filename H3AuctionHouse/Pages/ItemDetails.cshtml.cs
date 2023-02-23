@@ -6,7 +6,6 @@ namespace H3AuctionHouse.Pages
 {
     public class ItemDetailsModel : PageModel
     {
-        [BindProperty(SupportsGet = true)]
         public int Item { get; set; }
         public void OnGet(int id)
         {
