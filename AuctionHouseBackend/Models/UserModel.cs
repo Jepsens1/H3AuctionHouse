@@ -1,4 +1,6 @@
-﻿namespace AuctionHouseBackend.Models
+﻿using AuctionHouseBackend.Interfaces;
+
+namespace AuctionHouseBackend.Models
 {
     /// <summary>
     /// This class represents a user

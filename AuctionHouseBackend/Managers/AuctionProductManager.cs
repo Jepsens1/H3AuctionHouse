@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AuctionHouseBackend.Managers
 {
-    public class AuctionProductManager : IProductManager<AuctionProductModel>
+    public class AuctionProductManager : IProductManager<ProductModel<AuctionProductModel>>
     {
         private DatabaseAuctionProduct databaseAuctionProduct;
         public AuctionProductManager(DatabaseAuctionProduct databaseAuctionProduct) 
@@ -17,22 +17,22 @@ namespace AuctionHouseBackend.Managers
             this.databaseAuctionProduct = databaseAuctionProduct;
         }
 
-        public List<AuctionProductModel> GetAll()
+        public List<ProductModel<AuctionProductModel>> GetAll()
         {
-            throw new NotImplementedException();
+            return databaseAuctionProduct.GetAll();
         }
 
-        public bool Create(AuctionProductModel product)
+        public bool Create(ProductModel<AuctionProductModel> product)
         {
             return databaseAuctionProduct.Create(product);
         }
 
-        public List<AuctionProductModel> GetUserProducts(int userId)
+        public List<ProductModel<AuctionProductModel>> GetUserProducts(int userId)
         {
             return databaseAuctionProduct.GetUserProducts(userId);
         }
 
-        List<AuctionProductModel> IProductManager<AuctionProductModel>.GetProduct(Category category)
+        List<ProductModel<AuctionProductModel>> IProductManager<ProductModel<AuctionProductModel>>.GetProduct(Category category)
         {
             throw new NotImplementedException();
         }

@@ -15,10 +15,9 @@ namespace AuctionHouseBackend.Models
         public Category Category { get; set; }
         public Status Status { get; set; }
         public DateTime ExpireryDate { get; set; }
-        public UserModel Owner { get; }
         public AuctionBidderModel HighestBidder { get; set; }
 
-        public AuctionProductModel(int id, string name, string description, Category category, Status status, DateTime expireryDate, UserModel owner)
+        public AuctionProductModel(int id, string name, string description, Category category, Status status, DateTime expireryDate)
         {
             Id = id;
             Name = name;
@@ -26,17 +25,15 @@ namespace AuctionHouseBackend.Models
             Category = category;
             Status = status;
             ExpireryDate = expireryDate;
-            Owner = owner;
         }
 
-        public AuctionProductModel(string name, string description, Category category, Status status, DateTime expireryDate, UserModel owner)
+        public AuctionProductModel(string name, string description, Category category, Status status, DateTime expireryDate)
         {
             Name = name;
             Description = description;
             Category = category;
             Status = status;
             ExpireryDate = expireryDate;
-            Owner = owner;
         }
 
         public override string ToString()
