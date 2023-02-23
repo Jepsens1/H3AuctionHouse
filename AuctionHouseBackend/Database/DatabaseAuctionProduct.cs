@@ -34,7 +34,7 @@ namespace AuctionHouseBackend.Database
                     string description = SqlDataReader["productDescription"].ToString();
                     Category category = (Category)SqlDataReader["productCategory"];
                     Status status = (Status)SqlDataReader["productStatus"];
-                    DateTime expDate = (DateTime)SqlDataReader["expireryDate"];
+                    DateTime expDate = DateTime.Parse(SqlDataReader["expireryDate"].ToString());
                     int highestBidderId = 0;
                     decimal price = 0;
                     if (!DBNull.Value.Equals(SqlDataReader["highestBidderId"]))
