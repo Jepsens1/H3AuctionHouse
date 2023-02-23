@@ -19,40 +19,48 @@ namespace AuctionHouseBackend.Database
 
         public List<ProductModel<AuctionProductModel>> GetAll()
         {
-            OpenConnection();
-            string query = $"SELECT * FROM AuctionProducts";
-            SqlDataCommand = new SqlCommand(query, SqlConnect);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
             List<ProductModel<AuctionProductModel>> products = new List<ProductModel<AuctionProductModel>>();
-            while (SqlDataReader.Read())
+            try
             {
-                int id = Convert.ToInt32(SqlDataReader["productId"]);
-                string name = SqlDataReader["productName"].ToString();
-                string description = SqlDataReader["productDescription"].ToString();
-                Category category = (Category)SqlDataReader["productCategory"];
-                Status status = (Status)SqlDataReader["productStatus"];
-                DateTime expDate = (DateTime)SqlDataReader["expireryDate"];
-                int highestBidderId = 0;
-                decimal price = 0;
-                if (!DBNull.Value.Equals(SqlDataReader["highestBidderId"]))
+
+                OpenConnection();
+                string query = $"SELECT * FROM AuctionProducts";
+                SqlDataCommand = new SqlCommand(query, SqlConnect);
+                SqlDataReader = SqlDataCommand.ExecuteReader();
+                while (SqlDataReader.Read())
                 {
-                    highestBidderId = Convert.ToInt32(SqlDataReader["highestBidderId"]);
-                    price = Convert.ToDecimal(SqlDataReader["price"]);
+                    int id = Convert.ToInt32(SqlDataReader["productId"]);
+                    string name = SqlDataReader["productName"].ToString();
+                    string description = SqlDataReader["productDescription"].ToString();
+                    Category category = (Category)SqlDataReader["productCategory"];
+                    Status status = (Status)SqlDataReader["productStatus"];
+                    DateTime expDate = (DateTime)SqlDataReader["expireryDate"];
+                    int highestBidderId = 0;
+                    decimal price = 0;
+                    if (!DBNull.Value.Equals(SqlDataReader["highestBidderId"]))
+                    {
+                        highestBidderId = Convert.ToInt32(SqlDataReader["highestBidderId"]);
+                        price = Convert.ToDecimal(SqlDataReader["price"]);
+                    }
+                    UserModel user = new UserModel(highestBidderId);
+                    AuctionBidderModel bidder = new AuctionBidderModel(user, price);
+                    AuctionProductModel model = new AuctionProductModel(id, name, description, category, status, expDate);
+                    ProductModel<AuctionProductModel> productModel = new ProductModel<AuctionProductModel>(model, null);
+                    if (bidder != null)
+                    {
+                        model.HighestBidder = bidder;
+                    }
+                    products.Add(productModel);
                 }
-                UserModel user = new UserModel(highestBidderId);
-                AuctionBidderModel bidder = new AuctionBidderModel(user, price);
-                AuctionProductModel model = new AuctionProductModel(id, name, description, category, status, expDate);
-                ProductModel<AuctionProductModel> productModel = new ProductModel<AuctionProductModel>(model, null);
-                if (bidder != null)
+                CloseConnection();
+                for (int i = 0; i < products.Count; i++)
                 {
-                    model.HighestBidder = bidder;
+                    products[i].Owner = GetUserFromProductId(products[i].Product.Id);
                 }
-                products.Add(productModel);
             }
-            CloseConnection();
-            for (int i = 0; i < products.Count; i++)
+            catch (Exception ex)
             {
-                products[i].Owner = GetUserFromProductId(products[i].Product.Id);
+                return null;
             }
             return products;
         }
