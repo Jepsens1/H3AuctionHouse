@@ -61,6 +61,7 @@ namespace AuctionHouseBackend.Database
             catch (Exception ex)
             {
                 CloseConnection();
+                Logger.AddLog(LogLevel.ERROR, "AddAll() " + ex.Message);
                 return new List<ProductModel<AuctionProductModel>>();
             }
             return products;
@@ -68,41 +69,50 @@ namespace AuctionHouseBackend.Database
 
         public ProductModel<AuctionProductModel> GetProduct(int productId)
         {
-            OpenConnection();
-            UserModel owner = GetUserFromProductId(productId);
-            string query = $"SELECT * FROM AuctionProducts WHERE productId = {productId}";
-            SqlDataCommand = new SqlCommand(query, SqlConnect);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
-            ProductModel<AuctionProductModel> product = null;
-            if (SqlDataReader.Read())
+            try
             {
-                int id = Convert.ToInt32(SqlDataReader["productId"]);
-                string name = SqlDataReader["productName"].ToString();
-                string description = SqlDataReader["productDescription"].ToString();
-                Category category = (Category)SqlDataReader["productCategory"];
-                Status status = (Status)SqlDataReader["productStatus"];
-                DateTime expDate = (DateTime)SqlDataReader["expireryDate"];
-                int highestBidderId = 0;
-                decimal price = 0;
-                if (!DBNull.Value.Equals(SqlDataReader["highestBidderId"]))
+                OpenConnection();
+                UserModel owner = GetUserFromProductId(productId);
+                string query = $"SELECT * FROM AuctionProducts WHERE productId = {productId}";
+                SqlDataCommand = new SqlCommand(query, SqlConnect);
+                SqlDataReader = SqlDataCommand.ExecuteReader();
+                ProductModel<AuctionProductModel> product = null;
+                if (SqlDataReader.Read())
                 {
-                    highestBidderId = Convert.ToInt32(SqlDataReader["highestBidderId"]);
-                    price = Convert.ToDecimal(SqlDataReader["price"]);
+                    int id = Convert.ToInt32(SqlDataReader["productId"]);
+                    string name = SqlDataReader["productName"].ToString();
+                    string description = SqlDataReader["productDescription"].ToString();
+                    Category category = (Category)SqlDataReader["productCategory"];
+                    Status status = (Status)SqlDataReader["productStatus"];
+                    DateTime expDate = (DateTime)SqlDataReader["expireryDate"];
+                    int highestBidderId = 0;
+                    decimal price = 0;
+                    if (!DBNull.Value.Equals(SqlDataReader["highestBidderId"]))
+                    {
+                        highestBidderId = Convert.ToInt32(SqlDataReader["highestBidderId"]);
+                        price = Convert.ToDecimal(SqlDataReader["price"]);
+                    }
+                    UserModel highestBidder = new UserModel(highestBidderId);
+                    AuctionBidderModel bidder = new AuctionBidderModel(highestBidder, price);
+                    AuctionProductModel model = new AuctionProductModel(id, name, description, category, status, expDate);
+                    product = new ProductModel<AuctionProductModel>(model, owner);
+                    if (bidder != null)
+                    {
+                        model.HighestBidder = bidder;
+                    }
                 }
-                UserModel highestBidder = new UserModel(highestBidderId);
-                AuctionBidderModel bidder = new AuctionBidderModel(highestBidder, price);
-                AuctionProductModel model = new AuctionProductModel(id, name, description, category, status, expDate);
-                product = new ProductModel<AuctionProductModel>(model, owner);
-                if (bidder != null)
-                {
-                    model.HighestBidder = bidder;
-                }
-            }
-            CloseConnection();
-            UserModel user = GetUser(product.Product.Id);
-            product.Product.HighestBidder.User = user;
+                CloseConnection();
+                UserModel user = GetUser(product.Product.Id);
+                product.Product.HighestBidder.User = user;
 
-            return product;
+                return product;
+            }
+            catch (Exception ex)
+            {
+                CloseConnection();
+                Logger.AddLog(LogLevel.ERROR, "GetProduct() " + ex.Message);
+                return null;
+            }
         }
 
         public bool Create(ProductModel<AuctionProductModel> product)
@@ -128,6 +138,7 @@ namespace AuctionHouseBackend.Database
             catch (Exception ex)
             {
                 CloseConnection();
+                Logger.AddLog(LogLevel.ERROR, "Create() " + ex.Message);
                 return false;
             }
             return true;
@@ -137,45 +148,53 @@ namespace AuctionHouseBackend.Database
         {
             int productId = GetProductIdFromUserId(userId);
             UserModel owner = GetUser(userId);
-            OpenConnection();
-            string query = $"SELECT * FROM AuctionProducts WHERE productId = {productId}";
-            SqlDataCommand = new SqlCommand(query, SqlConnect);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
-            List<ProductModel<AuctionProductModel>> products = new List<ProductModel<AuctionProductModel>>();
-            while (SqlDataReader.Read())
+            try
             {
-                int id = Convert.ToInt32(SqlDataReader["productId"]);
-                string name = SqlDataReader["productName"].ToString();
-                string description = SqlDataReader["productDescription"].ToString();
-                Category category = (Category)SqlDataReader["productCategory"];
-                Status status = (Status)SqlDataReader["productStatus"];
-                DateTime expDate = DateTime.Parse(SqlDataReader["expireryDate"].ToString());
-                int highestBidderId = 0;
-                decimal price = 0;
-                if (!DBNull.Value.Equals(SqlDataReader["highestBidderId"]))
+                OpenConnection();
+                string query = $"SELECT * FROM AuctionProducts WHERE productId = {productId}";
+                SqlDataCommand = new SqlCommand(query, SqlConnect);
+                SqlDataReader = SqlDataCommand.ExecuteReader();
+                List<ProductModel<AuctionProductModel>> products = new List<ProductModel<AuctionProductModel>>();
+                while (SqlDataReader.Read())
                 {
-                    highestBidderId = Convert.ToInt32(SqlDataReader["highestBidderId"]);
-                    price = Convert.ToDecimal(SqlDataReader["price"]);
+                    int id = Convert.ToInt32(SqlDataReader["productId"]);
+                    string name = SqlDataReader["productName"].ToString();
+                    string description = SqlDataReader["productDescription"].ToString();
+                    Category category = (Category)SqlDataReader["productCategory"];
+                    Status status = (Status)SqlDataReader["productStatus"];
+                    DateTime expDate = DateTime.Parse(SqlDataReader["expireryDate"].ToString());
+                    int highestBidderId = 0;
+                    decimal price = 0;
+                    if (!DBNull.Value.Equals(SqlDataReader["highestBidderId"]))
+                    {
+                        highestBidderId = Convert.ToInt32(SqlDataReader["highestBidderId"]);
+                        price = Convert.ToDecimal(SqlDataReader["price"]);
+                    }
+                    UserModel user = new UserModel(highestBidderId);
+                    AuctionBidderModel bidder = new AuctionBidderModel(user, price);
+                    AuctionProductModel model = new AuctionProductModel(id, name, description, category, status, expDate);
+                    ProductModel<AuctionProductModel> productModel = new ProductModel<AuctionProductModel>(model, owner);
+                    if (bidder != null)
+                    {
+                        model.HighestBidder = bidder;
+                    }
+                    products.Add(productModel);
                 }
-                UserModel user = new UserModel(highestBidderId);
-                AuctionBidderModel bidder = new AuctionBidderModel(user, price);
-                AuctionProductModel model = new AuctionProductModel(id, name, description, category, status, expDate);
-                ProductModel<AuctionProductModel> productModel = new ProductModel<AuctionProductModel>(model, owner);
-                if (bidder != null )
-                {
-                    model.HighestBidder = bidder;
-                }
-                products.Add(productModel);
-            }
-            CloseConnection();
+                CloseConnection();
 
-            for (int i = 0; i < products.Count; i++)
+                for (int i = 0; i < products.Count; i++)
+                {
+                    UserModel user = GetUser(products[i].Product.Id);
+                    products[i].Product.HighestBidder.User = user;
+                }
+                return products;
+            }
+            catch (Exception ex)
             {
-                UserModel user = GetUser(products[i].Product.Id);
-                products[i].Product.HighestBidder.User = user;
+                CloseConnection();
+                Logger.AddLog(LogLevel.ERROR, "GetUserProducts() " + ex.Message);
+                return new List<ProductModel<AuctionProductModel>>();
             }
-
-            return products;
         }
 
         public void SetHighestBidder(int userId, int productId, decimal price)
