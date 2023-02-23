@@ -53,7 +53,7 @@ namespace AuctionHouseBackend.Models
                 $"Expirery Date: {ExpireryDate}, Price: {HighestBidder.Price}";
         }
 
-        public void TriggerOnPriceChanged(object product)
+        public void TriggerOnStatusChanged(object product)
         {
             OnStatusChanged?.Invoke(this, product);
         }

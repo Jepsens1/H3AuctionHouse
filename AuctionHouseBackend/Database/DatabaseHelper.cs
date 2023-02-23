@@ -8,7 +8,11 @@ using System.Threading.Tasks;
 
 namespace AuctionHouseBackend.Database
 {
-    public class DatabaseHandler
+    /// <summary>
+    /// Database help class
+    /// Other database object can inherit from this object for easy database call access
+    /// </summary>
+    public class DatabaseHelper
     {
         public string ConnectionString { get; }
         public SqlConnection SqlConnect { get; protected set; }
@@ -16,7 +20,7 @@ namespace AuctionHouseBackend.Database
         public SqlDataReader SqlDataReader { get; protected set; }
         public SqlDataAdapter SqlDataAdapter { get; protected set; }
 
-        public DatabaseHandler(string connectionString) 
+        public DatabaseHelper(string connectionString) 
         { 
             ConnectionString= connectionString;
             SqlConnect = new SqlConnection(ConnectionString);

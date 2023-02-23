@@ -9,7 +9,10 @@ using System.Threading.Tasks;
 
 namespace AuctionHouseBackend.Database
 {
-    public class DatabaseLogin : DatabaseHandler
+    /// <summary>
+    /// This object handles Login and registration
+    /// </summary>
+    public class DatabaseLogin : DatabaseHelper
     {
         public DatabaseLogin(string connectionString) : base(connectionString)
         {

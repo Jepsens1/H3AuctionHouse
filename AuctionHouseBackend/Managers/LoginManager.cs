@@ -6,9 +6,9 @@ namespace AuctionHouseBackend.Managers
 {
     public class LoginManager
     {
-        private DatabaseHandler databaseHandler;
+        private DatabaseHelper databaseHandler;
 
-        public LoginManager(DatabaseHandler databaseHandler)
+        public LoginManager(DatabaseHelper databaseHandler)
         {
             this.databaseHandler = databaseHandler;
         }

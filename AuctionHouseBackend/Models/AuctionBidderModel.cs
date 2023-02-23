@@ -8,7 +8,7 @@ namespace AuctionHouseBackend.Models
 {
     public class AuctionBidderModel : PropertyChangedModel
     {
-        public event EventHandler<bool> OnPriceChanged;
+        public event EventHandler<object> OnPriceChanged;
         public UserModel User { get; set; }
         private decimal price;
         public decimal Price
@@ -27,9 +27,9 @@ namespace AuctionHouseBackend.Models
             Price = price;
         }
 
-        public void TriggerOnPriceChanged(bool priceChanged)
+        public void TriggerOnPriceChanged(object product)
         {
-            OnPriceChanged?.Invoke(this, priceChanged);
+            OnPriceChanged?.Invoke(this, product);
         }
     }
 }
