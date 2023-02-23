@@ -106,8 +106,9 @@ namespace AuctionHouseBackend.Database
                 SqlDataCommand.ExecuteScalar();
                 CloseConnection();
                 OpenConnection();
+                // Convert DateTime to string because the database was a bitch
                 DateTime date = product.Product.ExpireryDate;
-                string sqlFormattedDate = date.ToString("yyyy-MM-dd");
+                string sqlFormattedDate = date.ToString("yyyy-MM-dd HH:mm:ss.fff");
                 string query2 = $"INSERT INTO AuctionProducts(productId, productName, productDescription, productStatus, productCategory, expireryDate) VALUES " +
                     $"({product.Owner.Id}, '{product.Product.Name}', '{product.Product.Description}', {(int)product.Product.Status}, {(int)product.Product.Category}, " +
                     $"'{sqlFormattedDate}')";
