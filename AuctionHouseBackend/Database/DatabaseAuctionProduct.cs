@@ -173,6 +173,18 @@ namespace AuctionHouseBackend.Database
         {
             OpenConnection();
             string query = $"UPDATE AuctionProducts SET highestBidderId = {userId}, price = {price} WHERE productId = {productId}";
+            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlDataReader = SqlDataCommand.ExecuteReader();
+            CloseConnection();
+        }
+
+        public void ChangeStatus(int productId, Status status)
+        {
+            OpenConnection();
+            string query = $"UPDATE AuctionProducts SET status = {(int)status} WHERE productId = {productId}";
+            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlDataReader = SqlDataCommand.ExecuteReader();
+            CloseConnection();
         }
 
         public ProductModel<AuctionProductModel> GetProduct(Category category)
