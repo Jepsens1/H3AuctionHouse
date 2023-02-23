@@ -1,4 +1,5 @@
 ﻿using AuctionHouseBackend.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace AuctionHouseBackend.Models
 {
@@ -7,6 +8,7 @@ namespace AuctionHouseBackend.Models
     /// </summary>
     public class UserModel
     {
+        
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -36,6 +38,10 @@ namespace AuctionHouseBackend.Models
         public UserModel(int id)
         {
             Id = id;
+        }
+        public UserModel()
+        {
+
         }
     }
 }

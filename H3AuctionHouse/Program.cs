@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Identity;
 using AuctionHouseBackend.Database;
 using AuctionHouseBackend.Managers;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Configuration;
 
 namespace H3AuctionHouse
 {
     public class Program
     {
-        public static LoginManager _manager = new LoginManager(new DatabaseLogin("Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;"));
+        public static LoginManager _loginManager = new LoginManager(new DatabaseLogin("Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;"));
+        public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct("Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;"));
         public static void Main(string[] args)
         {
 
@@ -23,6 +25,7 @@ namespace H3AuctionHouse
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.Name = "AuctionSession";
+               
             });
             builder.Services.AddAuthentication(options =>
             {
@@ -72,7 +75,6 @@ namespace H3AuctionHouse
                 }
                 await next();
             });
-
             app.UseAuthentication();
             app.UseAuthorization();
 

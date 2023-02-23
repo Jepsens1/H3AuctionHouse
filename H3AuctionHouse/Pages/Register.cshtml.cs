@@ -31,14 +31,23 @@ namespace H3AuctionHouse.Pages
         }
         public IActionResult OnPost()
         {
-            if (Program._manager.CreateAccount(new UserModel(Firstname, Lastname, Username, Email, Password)))
+            try
             {
-                return RedirectToPage("Login");
+                if (Program._loginManager.CreateAccount(new UserModel(Firstname, Lastname, Username, Email, Password)))
+                {
+                    return RedirectToPage("Login");
+                }
+                else
+                {
+                    return Page();
+                }
             }
-            else
+            catch (Exception)
             {
+
                 return Page();
             }
+            
         }
     }
 }

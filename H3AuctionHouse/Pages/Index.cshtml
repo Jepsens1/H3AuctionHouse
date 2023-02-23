@@ -6,16 +6,52 @@
     {
         <form>
             <p>
-                Item title: <input type="text" name="SearchString">
-                <input type="submit" value="Search" />
+                <select asp-for="SelectedCategory" asp-items="Model.Categorys">
+                    <option value="">All</option>
+                </select>
             </p>
         </form>
-        <div class="text-center">
-            @foreach(int item in Model.Items)
-            {
-                <a asp-page="/ItemDetails" asp-route-id="@item">@item</a>
-            }
-        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Description</th>
+                    <th>Expirery Date</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Highest Bid</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelitem => item.Product.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelitem => item.Product.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelitem => item.Product.ExpireryDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelitem => item.Product.Category)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelitem => item.Product.Status)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelitem => item.Product.HighestBidder)
+                        </td>
+
+                        <td>
+                            <a asp-page="/ItemDetails" asp-route-id="@item.Product.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
     else
     {

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AuctionHouseBackend.Models;
 
 namespace H3AuctionHouse.Pages
 {
@@ -27,22 +28,33 @@ namespace H3AuctionHouse.Pages
         }
         public IActionResult OnPost()
         {
-            if(Program._manager.Login(Username, Password))
+            try
             {
-                HttpContext.Session.SetString("user", Username);
-                string token = BuildToken();
-                CookieOptions options = new CookieOptions{
-                    Secure = true,
-                    HttpOnly = true,
-                };
-                Response.Cookies.Append("token", token, options);
-                return RedirectToPage("Index");
+                UserModel user = Program._loginManager.Login(Username, Password);
+                if (user != null)
+                {
+                    HttpContext.Session.SetObjectAsJson("user", user);
+                    string token = BuildToken();
+                    CookieOptions options = new CookieOptions
+                    {
+                        Secure = true,
+                        HttpOnly = true,
+                    };
+                    Response.Cookies.Append("token", token, options);
+                    return RedirectToPage("Index");
+                }
+                else
+                {
+                    Errormsg = "Wrong username or password";
+                    return Page();
+                }
             }
-            else
+            catch (Exception)
             {
-                Errormsg = "Wrong username or password";
+                Errormsg = "Something went wrong";
                 return Page();
             }
+          
         }
 
         private string BuildToken()

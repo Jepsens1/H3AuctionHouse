@@ -7,9 +7,17 @@ namespace H3AuctionHouse.Pages
     {
         public IActionResult OnGet()
         {
-            HttpContext.Session.Remove("user");
-            Response.Cookies.Delete("token");
-            return RedirectToPage("Index");
+            try
+            {
+                HttpContext.Session.Remove("user");
+                Response.Cookies.Delete("token");
+                return RedirectToPage("Index");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
