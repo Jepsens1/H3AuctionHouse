@@ -1,19 +1,30 @@
 ﻿using AuctionHouseBackend.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AuctionHouseBackend.Models
 {
-    public class AuctionProductModel : IProduct
+    public class AuctionProductModel : PropertyChangedModel, IProduct
     {
+        public event EventHandler<object> OnStatusChanged;
         public int Id { get; private set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Category Category { get; set; }
-        public Status Status { get; set; }
+        private Status status;
+        public Status Status
+        {
+            get { return status; }
+            set
+            {
+                status = value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
         public DateTime ExpireryDate { get; set; }
         public AuctionBidderModel HighestBidder { get; set; }
 
@@ -40,6 +51,11 @@ namespace AuctionHouseBackend.Models
         {
             return $"Id: {Id}, Name: {Name}, Description: {Description}, Category: {Category.ToString()}, Status: {Status.ToString()}, " +
                 $"Expirery Date: {ExpireryDate}, Price: {HighestBidder.Price}";
+        }
+
+        public void TriggerOnPriceChanged(object product)
+        {
+            OnStatusChanged?.Invoke(this, product);
         }
     }
 }

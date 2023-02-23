@@ -21,7 +21,7 @@ namespace AuctionHouseBackend
                 if (input == 1)
                 {
                     ProductModel<AuctionProductModel> model = new ProductModel<AuctionProductModel>(new Models.AuctionProductModel("test jessen2", "test jessen2",
-                        Interfaces.Category.KID, Interfaces.Status.CREATED, DateTime.Today), user);
+                        Interfaces.Category.KID, Interfaces.Status.AVAILABLE, DateTime.Today), user);
                     if (product.Create(model))
                     {
                         Console.WriteLine("Product created");

@@ -42,11 +42,11 @@ CREATE TABLE Product
 CREATE TABLE AuctionProducts
 (
 	productId int FOREIGN KEY REFERENCES Product(id),
-	productName varchar(255),
-	productDescription varchar(255),
-	productStatus int,
-	productCategory int,
-	expireryDate DATETIME,
+	productName varchar(255) NOT NULL,
+	productDescription varchar(255) NOT NULL,
+	productStatus int NOT NULL,
+	productCategory int NOT NULL,
+	expireryDate varchar(255) NOT NULL,
 	highestBidderId int,
 	price decimal
 )
