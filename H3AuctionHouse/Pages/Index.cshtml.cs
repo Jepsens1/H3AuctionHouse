@@ -16,8 +16,7 @@ namespace H3AuctionHouse.Pages
         public SelectList Categorys { get; set; } = new SelectList(Enum.GetValues(typeof(Category)).Cast<Category>());
 
         [BindProperty(SupportsGet = true)]
-        [Required]
-        public string SelectedCategory { get; set; }
+        public string? SelectedCategory { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger)
         {
@@ -28,6 +27,17 @@ namespace H3AuctionHouse.Pages
             if(HttpContext.Session.GetString("user") != null)
             {
                 Items = Program._auctionproductmanager.GetAll();
+                if(!string.IsNullOrEmpty(SelectedCategory))
+                {
+                    Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
+                    for (int i = 0; i < Items.Count; i++)
+                    {
+                        if (Items[i].Product.Category != category)
+                        {
+                            Items.RemoveAt(i);
+                        }
+                    }
+                }
             }
         }
     }
