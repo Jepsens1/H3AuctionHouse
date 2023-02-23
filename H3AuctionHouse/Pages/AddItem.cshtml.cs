@@ -22,13 +22,11 @@ namespace H3AuctionHouse.Pages
         public string Errormsg { get; set; }
 
         [BindProperty]
-        [Required]
-        public DateTime ExpireDate { get; set; } = DateTime.Now;
+        public DateTime ExpireDate { get; set; } = DateTime.Now.AddMinutes(10);
 
         public SelectList Categorys { get; set; } = new SelectList(Enum.GetValues(typeof(Category)).Cast<Category>());
 
         [BindProperty]
-        [Required]
         public string SelectedCategory { get; set; }
 
 
@@ -39,10 +37,15 @@ namespace H3AuctionHouse.Pages
         {
             try
             {
+                bool Iscreated = false;
                 UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
                 Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
-                bool Iscreated = Program._auctionproductmanager.Create(new ProductModel<AuctionProductModel>(new AuctionProductModel(ProductName, Description, category
-                    , Status.CREATED, ExpireDate), user));
+                if(!string.IsNullOrEmpty(ProductName) && !string.IsNullOrEmpty(Description))
+                {
+                     Iscreated = Program._auctionproductmanager.Create(new ProductModel<AuctionProductModel>(new AuctionProductModel(ProductName, Description, category
+                    , Status.AVAILABLE, ExpireDate), user));
+
+                }
 
                 if (!Iscreated)
                 {
