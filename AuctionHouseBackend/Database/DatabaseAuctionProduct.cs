@@ -60,7 +60,7 @@ namespace AuctionHouseBackend.Database
             }
             catch (Exception ex)
             {
-                return null;
+                return new List<ProductModel<AuctionProductModel>>();
             }
             return products;
         }
