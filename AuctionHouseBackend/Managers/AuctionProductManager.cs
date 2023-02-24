@@ -39,6 +39,19 @@ namespace AuctionHouseBackend.Managers
             return databaseAuctionProduct.GetUserProducts(userId);
         }
 
+        public List<ProductModel<AuctionProductModel>> GetProduct(Category category)
+        {
+            List<ProductModel<AuctionProductModel>> categoryProducts = new List<ProductModel<AuctionProductModel>>();
+            for (int i = 0; i < Products.Count; i++)
+            {
+                if (Products[i].Product.Category == category)
+                {
+                    categoryProducts.Add(Products[i]);
+                }
+            }
+            return categoryProducts;
+        }
+
         /// <summary>
         /// Function for the user to bid on products
         /// If user bids on product with 10 minutes or less left the expirery date will get 10 minutes added to its current time
