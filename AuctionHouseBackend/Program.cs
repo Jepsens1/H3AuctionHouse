@@ -7,13 +7,13 @@ namespace AuctionHouseBackend
 {
     internal class Program
     {
-        //static string con = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
-        static string con = "Server=DESKTOP-R394HDQ;Database=AuctionHouse;Trusted_Connection=True;";
+        static string con = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
+        //static string con = "Server=DESKTOP-R394HDQ;Database=AuctionHouse;Trusted_Connection=True;";
         static List<ProductModel<AuctionProductModel>> auctionProducts;
         static void Main(string[] args)
         {
             AuctionProductManager product = new AuctionProductManager(new DatabaseAuctionProduct(con));
-            CreateLoginUser("PJJ", "test1");
+            CreateLoginUser("Jessen", "test1");
             LoginManager login = new LoginManager(new DatabaseLogin(con));
             UserModel user = login.GetUser("Jessen");
             auctionProducts = product.GetAll();

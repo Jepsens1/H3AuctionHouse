@@ -110,12 +110,18 @@ namespace AuctionHouseBackend.Database
                 OpenConnection();
                 DateTime date = product.Product.ExpireryDate;
                 string sqlFormattedDate = date.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                string query = $"INSERT INTO Product(userId) VALUES ({product.Owner.Id}) INSERT INTO AuctionProducts(productId, productName, productDescription, productStatus, productCategory, expireryDate) VALUES " +
-                    $"({product.Owner.Id}, '{product.Product.Name}', '{product.Product.Description}', {(int)product.Product.Status}, {(int)product.Product.Category}, " +
-                    $"'{sqlFormattedDate}')";
+                string query = $"INSERT INTO Product(userId) VALUES ({product.Owner.Id})";
                 SqlDataCommand = new SqlCommand(query, SqlConnect);
                 SqlDataCommand.ExecuteScalar();
+                string query2 = $"SELECT TOP 1 * FROM Product ORDER BY id DESC ";
+                SqlDataCommand.CommandText = query2;
+                int productId = Convert.ToInt32(SqlDataCommand.ExecuteScalar());
+                string query3 = $"INSERT INTO AuctionProducts(productId, productName, productDescription, productStatus, productCategory, expireryDate) VALUES ({productId}, '{product.Product.Name}'," +
+                    $" '{product.Product.Description}', {(int)product.Product.Status}, {(int)product.Product.Category}, '{sqlFormattedDate}')";
+                SqlDataCommand.CommandText = query3;
+                SqlDataCommand.ExecuteNonQuery();
                 CloseConnection();
+
             }
             catch (Exception ex)
             {
