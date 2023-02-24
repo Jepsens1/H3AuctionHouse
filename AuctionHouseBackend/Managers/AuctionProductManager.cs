@@ -15,12 +15,13 @@ namespace AuctionHouseBackend.Managers
     /// </summary>
     public class AuctionProductManager : IProductManager<ProductModel<AuctionProductModel>>
     {
+        public event EventHandler<object> OnProductCreated;
         public List<ProductModel<AuctionProductModel>> Products { get; set; }
         private DatabaseAuctionProduct databaseAuctionProduct;
         public AuctionProductManager(DatabaseAuctionProduct databaseAuctionProduct) 
         { 
             this.databaseAuctionProduct = databaseAuctionProduct;
-            Products = GetAll();
+            Products = databaseAuctionProduct.GetAll();
             Thread t = new Thread(CheckForFinnishedAuctions);
             t.Start();
         }
@@ -32,7 +33,13 @@ namespace AuctionHouseBackend.Managers
 
         public bool Create(ProductModel<AuctionProductModel> product)
         {
-            return databaseAuctionProduct.Create(product);
+            bool create = databaseAuctionProduct.Create(product);
+            if (create)
+            {
+                Products.Add(product);
+                TriggerOnProductCreated(product);
+            }
+            return create;
         }
 
         public List<ProductModel<AuctionProductModel>> GetUserProducts(int userId)
@@ -117,7 +124,6 @@ namespace AuctionHouseBackend.Managers
         {
             while (true)
             {
-                Products = databaseAuctionProduct.GetAll();
                 for (int i = 0; i < Products.Count; i++)
                 {
                     DateTime productExpireDay = DateTime.Parse(Products[i].Product.ExpireryDate.ToString());
@@ -139,6 +145,11 @@ namespace AuctionHouseBackend.Managers
 
                 Thread.Sleep(2000);
             }
+        }
+
+        private void TriggerOnProductCreated(object product)
+        {
+            OnProductCreated?.Invoke(this, product);
         }
     }
 }

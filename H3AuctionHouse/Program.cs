@@ -11,12 +11,13 @@ namespace H3AuctionHouse
 {
     public class Program
     {
-        public static LoginManager _loginManager = new LoginManager(new DatabaseLogin("Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;"));
-        public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct("Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;"));
+        /*patrick*/static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
+        /*phillip*///static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
+        public static LoginManager _loginManager = new LoginManager(new DatabaseLogin(constring));
+        public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct(constring));
         
         public static void StartStatusChangedEvent()
         {
-           
             for (int i = 0; i < _auctionproductmanager.Products.Count; i++)
             {
                 _auctionproductmanager.Products[i].Product.OnStatusChanged += Product_OnStatusChanged;
@@ -24,9 +25,23 @@ namespace H3AuctionHouse
            
         }
 
+        public static void StartOnProductCreatedEvent()
+        {
+            _auctionproductmanager.OnProductCreated += _auctionproductmanager_OnProductCreated;
+        }
+
+        private static void _auctionproductmanager_OnProductCreated(object? sender, object e)
+        {
+            for (int i = 0; i < _auctionproductmanager.Products.Count; i++)
+            {
+                _auctionproductmanager.Products[i].Product.OnStatusChanged -= Product_OnStatusChanged;
+                _auctionproductmanager.Products[i].Product.OnStatusChanged += Product_OnStatusChanged;
+            }
+        }
+
         private static void Product_OnStatusChanged(object? sender, object e)
         {
-          
+            // fixed and works
             string f = "";
             if(f != string.Empty)
             {
@@ -38,6 +53,7 @@ namespace H3AuctionHouse
         {
 
             StartStatusChangedEvent();
+            StartOnProductCreatedEvent();
             var builder = WebApplication.CreateBuilder(args);
             // Add services to the container.
             builder.Services.AddRazorPages();
