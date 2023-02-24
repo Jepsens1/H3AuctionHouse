@@ -1,0 +1,1 @@
+24-02-2023 10:32:15 ERROR AddAll() ExecuteReader requires an open and available Connection. The connection's current state is connecting.

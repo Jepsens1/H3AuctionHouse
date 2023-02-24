@@ -2,8 +2,6 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-    if (HttpContext.Session.GetString("user") != null)
-    {
         <form>
             <p>
                 <select asp-for="SelectedCategory" asp-items="Model.Categorys">
@@ -53,12 +51,5 @@
                 }
             </tbody>
         </table>
-    }
-    else
-    {
-        <div class="text-center">
-            <h1 class="display-4">Welcome</h1>
-            <p>Login or Register to see items on Auction</p>
-        </div>
-    }
+        <p>@Model.Errormsg</p>
 }
