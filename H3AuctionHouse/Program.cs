@@ -13,9 +13,31 @@ namespace H3AuctionHouse
     {
         public static LoginManager _loginManager = new LoginManager(new DatabaseLogin("Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;"));
         public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct("Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;"));
+        
+        public static void StartStatusChangedEvent()
+        {
+           
+            for (int i = 0; i < _auctionproductmanager.Products.Count; i++)
+            {
+                _auctionproductmanager.Products[i].Product.OnStatusChanged += Product_OnStatusChanged;
+            }
+           
+        }
+
+        private static void Product_OnStatusChanged(object? sender, object e)
+        {
+          
+            string f = "";
+            if(f != string.Empty)
+            {
+
+            }
+        }
+
         public static void Main(string[] args)
         {
 
+            StartStatusChangedEvent();
             var builder = WebApplication.CreateBuilder(args);
             // Add services to the container.
             builder.Services.AddRazorPages();
@@ -24,6 +46,7 @@ namespace H3AuctionHouse
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
+
                 options.Cookie.Name = "AuctionSession";
                
             });

@@ -1,12 +1,20 @@
 ﻿@page
 @model H3AuctionHouse.Pages.UserItemModel
 @{
+    <form>
+        <p>
+            <select asp-for="SelectedCategory" asp-items="Model.Categorys">
+                <option value="">All</option>
+            </select>
+            <input type="submit" value="Filter" />
+        </p>
+    </form>
     <table class="table">
         <thead>
             <tr>
                 <th>Item Name</th>
                 <th>Description</th>
-                <th>Expirery Date</th>>
+                <th>Expirery Date</th>
                 <th>Category</th>
                 <th>Status</th>
                 <th>Highest Bid</th>
@@ -42,4 +50,5 @@
             }
         </tbody>
     </table>
+    <p>@Model.Errormsg</p>
 }

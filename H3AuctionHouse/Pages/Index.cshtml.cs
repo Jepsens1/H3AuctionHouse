@@ -1,4 +1,5 @@
-﻿using AuctionHouseBackend.Interfaces;
+﻿using AuctionHouseBackend;
+using AuctionHouseBackend.Interfaces;
 using AuctionHouseBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,26 +19,27 @@ namespace H3AuctionHouse.Pages
         [BindProperty(SupportsGet = true)]
         public string? SelectedCategory { get; set; }
 
+        public string Errormsg { get; set; }
+
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
         }
         public void OnGet()
         {
-            if(HttpContext.Session.GetString("user") != null)
+            try
             {
                 Items = Program._auctionproductmanager.GetAll();
-                if(!string.IsNullOrEmpty(SelectedCategory))
+                if (!string.IsNullOrEmpty(SelectedCategory))
                 {
                     Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
-                    for (int i = 0; i < Items.Count; i++)
-                    {
-                        if (Items[i].Product.Category != category)
-                        {
-                            Items.RemoveAt(i);
-                        }
-                    }
+                    Items = Program._auctionproductmanager.GetProduct(category);
                 }
+            }
+            catch (Exception e)
+            {
+                Errormsg = "something went wrong";
+                Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "Index.OnGet()" + e.Message + e.StackTrace);
             }
         }
     }

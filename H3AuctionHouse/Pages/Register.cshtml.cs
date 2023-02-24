@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using AuctionHouseBackend.Models;
+using AuctionHouseBackend;
 
 namespace H3AuctionHouse.Pages
 {
@@ -42,9 +43,9 @@ namespace H3AuctionHouse.Pages
                     return Page();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "Register.OnPost()" + e.Message + e.StackTrace);
                 return Page();
             }
             

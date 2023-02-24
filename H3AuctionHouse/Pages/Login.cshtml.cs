@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AuctionHouseBackend.Models;
+using AuctionHouseBackend;
 
 namespace H3AuctionHouse.Pages
 {
@@ -49,9 +50,10 @@ namespace H3AuctionHouse.Pages
                     return Page();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Errormsg = "Something went wrong";
+                Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "Login.OnPost()" + e.Message + e.StackTrace);
                 return Page();
             }
           
