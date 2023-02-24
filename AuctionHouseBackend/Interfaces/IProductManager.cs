@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AuctionHouseBackend.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,7 @@ namespace AuctionHouseBackend.Interfaces
         bool Create(T product);
         // Used to get a product posted by a specific user
         List<T> GetUserProducts(int userId);
+        // Gets product by productId
+        ProductModel<AuctionProductModel> GetProduct(int productId);
     }
 }

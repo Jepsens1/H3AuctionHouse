@@ -20,6 +20,7 @@ namespace AuctionHouseBackend.Managers
         public AuctionProductManager(DatabaseAuctionProduct databaseAuctionProduct) 
         { 
             this.databaseAuctionProduct = databaseAuctionProduct;
+            Products = GetAll();
             Thread t = new Thread(CheckForFinnishedAuctions);
             t.Start();
         }
