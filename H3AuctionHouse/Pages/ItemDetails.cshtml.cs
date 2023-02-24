@@ -10,15 +10,20 @@ namespace H3AuctionHouse.Pages
 {
     public class ItemDetailsModel : PageModel
     {
+        //Used to display our items
         public ProductModel<AuctionProductModel> Item { get; set; }
 
-        [BindProperty(SupportsGet = true)]
+        //Used to get value from input box
+        [BindProperty]
         public decimal BidValue { get; set; }
+
+        //Used to display message on bid status
         public string Msg { get; set; }
         public void OnGet(int id)
         {
             try
             {
+                //Gets items with the id from our details page
                 Item = Program._auctionproductmanager.GetProduct(id);
             }
             catch (Exception)
@@ -37,6 +42,10 @@ namespace H3AuctionHouse.Pages
             DisplayResponse(response);
             Item = Program._auctionproductmanager.GetProduct(id);
         }
+        /// <summary>
+        /// Used to display message if bid is accepted or not
+        /// </summary>
+        /// <param name="response"></param>
         private void DisplayResponse(ResponseCode response)
         {
             switch (response)

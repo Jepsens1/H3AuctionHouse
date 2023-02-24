@@ -12,21 +12,31 @@ namespace H3AuctionHouse.Pages
     [Authorize]
     public class UserItemModel : PageModel
     {
+        //Used to display all items that user has
         public List<ProductModel<AuctionProductModel>> UserItems { get; set; }
+        
+        //Used to display all categorys in dropdownmenu
         public SelectList Categorys { get; set; } = new SelectList(Enum.GetValues(typeof(Category)).Cast<Category>());
 
         [BindProperty(SupportsGet = true)]
+        //Gets the value from dropdownmenu
+        //SupportsGet needs to be true, otherwise the value is always null
         public string? SelectedCategory { get; set; }
         public string Errormsg { get; set; }
         public void OnGet()
         {
             try
             {
+                //Gets user from session
                 UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
+                //Gets the Users Items with user id
                 UserItems = Program._auctionproductmanager.GetUserProducts(user.Id);
+                //If user selects category
                 if (!string.IsNullOrEmpty(SelectedCategory))
                 {
+                    //Converts value from dropdownmenu to enum
                     Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
+                    //Gets users items with category selected
                     UserItems = Program._auctionproductmanager.GetProduct(category);
                 }
             }

@@ -9,6 +9,7 @@ namespace H3AuctionHouse.Pages
         {
             try
             {
+                //Removes session and deletes cookie
                 HttpContext.Session.Remove("user");
                 Response.Cookies.Delete("token");
                 return RedirectToPage("Index");

@@ -10,14 +10,19 @@
             <div asp-validation-summary="All"></div>
             <div>
                 <label asp-for="@Model.ProductName"></label>
+                @*Value will be binded to our ProductName property*@
                 <input asp-for="@Model.ProductName">
             </div>
             <div>
                 <label asp-for="@Model.Description"></label>
+                @*Value will be binded to our Description property*@
                 <input asp-for="@Model.Description">
             </div>
             <div>
+                @*Value will be binded to our ExipireDate Datetime property*@
                 <input class="form-control" asp-for="ExpireDate" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                @*Creates a new select tag for every value Model.Categorys has*@
+                @*Value will be binded to our SelectedCategory property*@
                 <select asp-for="SelectedCategory" asp-items="Model.Categorys">
                 </select>
             </div>
@@ -25,6 +30,7 @@
                 <button type="submit">Create Item</button>
             </div>
         </form>
-        <p>@Model.Errormsg</p>
+        @*Displays our ErrorMessage*@
+        <p>@Model.ErrorMessage</p>
     </div>
 }

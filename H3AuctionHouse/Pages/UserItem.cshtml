@@ -3,6 +3,8 @@
 @{
     <form>
         <p>
+            @*Creates a new select tag for every value Model.Categorys has*@
+            @*Value will be binded to our SelectedCategory property*@
             <select asp-for="SelectedCategory" asp-items="Model.Categorys">
                 <option value="">All</option>
             </select>
@@ -21,8 +23,10 @@
             </tr>
         </thead>
         <tbody>
+            @*Loops through every item from our list of Items and creates a new row in our table*@
             @foreach (var item in Model.UserItems)
             {
+                @*Displays the value from the item object*@
                 <tr>
                     <td>
                         @Html.DisplayFor(modelitem => item.Product.Name)
@@ -44,11 +48,13 @@
                     </td>
 
                     <td>
+                        @*Is user clicks on details, redirects to ItemDetails page with id*@
                         <a asp-page="/ItemDetails" asp-route-id="@item.Product.Id">Details</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    @*Displays error message*@
     <p>@Model.Errormsg</p>
 }

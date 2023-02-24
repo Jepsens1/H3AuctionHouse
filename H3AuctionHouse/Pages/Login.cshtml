@@ -2,6 +2,7 @@
 @model H3AuctionHouse.Pages.LoginModel
 @{
     ViewData["Title"] = "Login";
+    @*Displays login form if user session is null*@
     if (HttpContext.Session.GetString("user") == null)
     {
         <h1>@ViewData["Title"]</h1>
@@ -12,10 +13,12 @@
             <div asp-validation-summary="All"></div>
             <div>
                 <label asp-for="@Model.Username"></label>
+                    @*Value will be binded to our Username property*@
                 <input asp-for="@Model.Username">
             </div>
             <div>
                 <label asp-for="@Model.Password"></label>
+                    @*Value will be binded to our Password property*@
                 <input asp-for="@Model.Password">
             </div>
             <div>
@@ -23,10 +26,12 @@
             </div>
         </form>
         </div>
+        @*Display error message*@
         <p>@Model.Errormsg</p>
     }
     else
     {
+        @*Display p tag if user session is not null*@
         <p>You are already logged in</p>
     }
 
