@@ -39,6 +39,18 @@ namespace AuctionHouseBackend.Managers
             return databaseAuctionProduct.GetUserProducts(userId);
         }
 
+        public ProductModel<AuctionProductModel> GetProduct(int productId)
+        {
+            for (int i = 0; i < Products.Count; i++)
+            {
+                if (Products[i].Product.Id == productId)
+                {
+                    return Products[i];
+                }
+            }
+            return null;
+        }
+
         public List<ProductModel<AuctionProductModel>> GetProduct(Category category)
         {
             List<ProductModel<AuctionProductModel>> categoryProducts = new List<ProductModel<AuctionProductModel>>();
