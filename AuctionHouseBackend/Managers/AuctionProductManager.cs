@@ -121,7 +121,7 @@ namespace AuctionHouseBackend.Managers
                 for (int i = 0; i < Products.Count; i++)
                 {
                     DateTime productExpireDay = DateTime.Parse(Products[i].Product.ExpireryDate.ToString());
-                    if (DateTime.Now >= productExpireDay)
+                    if (DateTime.Now >= productExpireDay && Products[i].Product.Status != Status.SOLD && Products[i].Product.Status != Status.EXPIRED)
                     {
                         if (Products[i].Product.HighestBidder != null)
                         {
