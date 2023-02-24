@@ -129,7 +129,7 @@ namespace AuctionHouseBackend.Managers
                     DateTime productExpireDay = DateTime.Parse(Products[i].Product.ExpireryDate.ToString());
                     if (DateTime.Now >= productExpireDay && Products[i].Product.Status != Status.SOLD && Products[i].Product.Status != Status.EXPIRED)
                     {
-                        if (Products[i].Product.HighestBidder != null)
+                        if (Products[i].Product.HighestBidder != null && Products[i].Product.HighestBidder.Price > 0)
                         {
                             Products[i].Product.Status = Status.SOLD;
                             databaseAuctionProduct.ChangeStatus(Products[i].Product.Id, Status.SOLD);
