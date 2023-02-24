@@ -74,27 +74,46 @@ namespace AuctionHouseBackend.Managers
         /// <param name="amount">The amount the user want to pay</param>
         /// <returns>Returns ErrorCodes.BidTooLow if bid is too low, returns ErrorCodes.YourOwnProduct if user tries to bid on his own product
         /// else returns ErrorCodes.NoError</returns>
-        public ErrorCodes BidOnProduct(int userId, ProductModel<AuctionProductModel> product, decimal amount)
+        public ResponseCode BidOnProduct(int userId, ProductModel<AuctionProductModel> product, decimal amount)
         {
-            if (product.Product.HighestBidder.Price >= amount)
+            try
             {
-                return ErrorCodes.BidTooLow;
+
+                ResponseCode response = HandleBidResponseCodes(userId, product, amount);
+                if (response != ResponseCode.NoError)
+                {
+                    return response;
+                }
+                databaseAuctionProduct.SetHighestBidder(userId, product.Product.Id, amount);
+                product.Product.HighestBidder.TriggerOnPriceChanged(product);
             }
+            catch (Exception ex)
+            {
+                Logger.AddLog(LogLevel.ERROR, "BidOnProduct()" + ex.Message);
+                return ResponseCode.UnknownError;
+            }
+            return ResponseCode.NoError;
+        }
+
+        private ResponseCode HandleBidResponseCodes(int userId, ProductModel<AuctionProductModel> product, decimal amount)
+        {
             if (product.Owner.Id == userId)
             {
-                return ErrorCodes.YourOwnProduct;
+                return ResponseCode.YourOwnProduct;
             }
-            if (DateTime.Now.AddMinutes(10) >= product.Product.ExpireryDate)
+            if (product.Product.Status == Status.SOLD)
             {
-                product.Product.ExpireryDate = DateTime.Now.AddMinutes(10);
+                return ResponseCode.ProductSold;
             }
-            databaseAuctionProduct.SetHighestBidder(userId, product.Product.Id, amount);
-            product.Product.HighestBidder.TriggerOnPriceChanged(product);
-            return ErrorCodes.NoError;
+            if (product.Product.HighestBidder.Price >= amount)
+            {
+                return ResponseCode.BidTooLow;
+            }
+            return ResponseCode.NoError;
         }
 
         /// <summary>
-        /// Checks if the current time is greater or equals to the expire date of the product every 3 seconds
+        /// Checks if the current time is greater or equals to the expire date of the product every 2 seconds
         /// if it is the status gets changed to sold and a event will be triggered
         /// </summary>
         private void CheckForFinnishedAuctions()

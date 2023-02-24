@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace AuctionHouseBackend
 {
-    public enum ErrorCodes
+    public enum ResponseCode
     {
         NoError,
-        UserExists,
+        UnknownError,
         BidTooLow,
-        NoUserFound,
+        ProductSold,
         YourOwnProduct
     }
 }
