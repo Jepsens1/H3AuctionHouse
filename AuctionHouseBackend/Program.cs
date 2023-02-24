@@ -13,7 +13,6 @@ namespace AuctionHouseBackend
         static void Main(string[] args)
         {
             AuctionProductManager product = new AuctionProductManager(new DatabaseAuctionProduct(con));
-            AuctionManager auctionManager = new AuctionManager(new DatabaseAuctionProduct(con));
             CreateLoginUser("PJJ", "test1");
             LoginManager login = new LoginManager(new DatabaseLogin(con));
             UserModel user = login.GetUser("Jessen");
@@ -54,7 +53,7 @@ namespace AuctionHouseBackend
                 }
                 else if (input == 4)
                 {
-                    auctionManager.BidOnProduct(user.Id, GetProductFromId(1), 700);
+                    product.BidOnProduct(user.Id, GetProductFromId(1), 700);
                 }
             }
             
