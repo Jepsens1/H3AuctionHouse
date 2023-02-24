@@ -41,14 +41,7 @@ namespace AuctionHouseBackend.Managers
 
         public ProductModel<AuctionProductModel> GetProduct(int productId)
         {
-            for (int i = 0; i < Products.Count; i++)
-            {
-                if (Products[i].Product.Id == productId)
-                {
-                    return Products[i];
-                }
-            }
-            return null;
+            return databaseAuctionProduct.GetProduct(productId);
         }
 
         public List<ProductModel<AuctionProductModel>> GetProduct(Category category)
@@ -78,7 +71,6 @@ namespace AuctionHouseBackend.Managers
         {
             try
             {
-
                 ResponseCode response = HandleBidResponseCodes(userId, product, amount);
                 if (response != ResponseCode.NoError)
                 {
@@ -105,6 +97,10 @@ namespace AuctionHouseBackend.Managers
             {
                 return ResponseCode.ProductSold;
             }
+            if (product.Product.Status == Status.EXPIRED)
+            {
+                return ResponseCode.ProductExpired;
+            }
             if (product.Product.HighestBidder.Price >= amount)
             {
                 return ResponseCode.BidTooLow;
@@ -126,9 +122,17 @@ namespace AuctionHouseBackend.Managers
                     DateTime productExpireDay = DateTime.Parse(Products[i].Product.ExpireryDate.ToString());
                     if (DateTime.Now >= productExpireDay)
                     {
-                        Products[i].Product.Status = Interfaces.Status.SOLD;
+                        if (Products[i].Product.HighestBidder != null)
+                        {
+                            Products[i].Product.Status = Status.SOLD;
+                            databaseAuctionProduct.ChangeStatus(Products[i].Product.Id, Status.SOLD);
+                        }
+                        else
+                        {
+                            Products[i].Product.Status = Status.EXPIRED;
+                            databaseAuctionProduct.ChangeStatus(Products[i].Product.Id, Status.EXPIRED);
+                        }
                         Products[i].Product.TriggerOnStatusChanged(Products[i]);
-                        databaseAuctionProduct.ChangeStatus(Products[i].Product.Id, Interfaces.Status.SOLD);
                     }
                 }
 

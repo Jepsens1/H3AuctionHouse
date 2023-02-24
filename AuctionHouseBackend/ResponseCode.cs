@@ -12,6 +12,7 @@ namespace AuctionHouseBackend
         UnknownError,
         BidTooLow,
         ProductSold,
+        ProductExpired
         YourOwnProduct
     }
 }
