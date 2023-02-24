@@ -1,15 +1,17 @@
 ﻿@page "{id:int}"
+@*This page requires an id to display to item with the id*@
 @model H3AuctionHouse.Pages.ItemDetailsModel
 @{
     ViewData["Title"] = "Details";
+    @*If user session is not, will not display the option to bid on item*@
     if (HttpContext.Session.GetString("user") != null)
     {
         <form method="post">
             <h2>Bid on Item</h2>
             <hr>
-            <div asp-validation-summary="All"></div>
             <div>
                 <label asp-for="@Model.BidValue"></label>
+                @*Binds value to our BidValue property*@
                 <input asp-for="@Model.BidValue">
                 <button type="submit">Bid now</button>
             </div>
@@ -17,6 +19,7 @@
     }
     else
     {
+        @*Displays if user is not logged in*@
         <p>You have to logged in, in order to bid on item</p>
     }
     <table class="table">
@@ -32,6 +35,7 @@
         </thead>
         <tbody>
             <tr>
+                @*Displays the values from our Item property*@
                 <td>
                     @Html.DisplayFor(modelitem => Model.Item.Product.Name)
                 </td>
@@ -53,5 +57,6 @@
             </tr>
         </tbody>
     </table>
+    @*Display if bid is succesful or error has happened*@
     <p>@Model.Msg</p>
 }

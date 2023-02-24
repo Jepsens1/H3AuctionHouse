@@ -31,16 +31,20 @@ namespace H3AuctionHouse.Pages
         {
             try
             {
+                //Tries to login
                 UserModel user = Program._loginManager.Login(Username, Password);
                 if (user != null)
                 {
+                    //Sets session with our user object
                     HttpContext.Session.SetObjectAsJson("user", user);
+                    //Builds a JWT token
                     string token = BuildToken();
                     CookieOptions options = new CookieOptions
                     {
                         Secure = true,
                         HttpOnly = true,
                     };
+                    //Creates a cookie with our jwt used for authorization
                     Response.Cookies.Append("token", token, options);
                     return RedirectToPage("Index");
                 }
@@ -58,18 +62,24 @@ namespace H3AuctionHouse.Pages
             }
           
         }
-
+        /// <summary>
+        /// This method returns a JWT token as string
+        /// </summary>
+        /// <returns></returns>
         private string BuildToken()
         {
+            //JWT token will contain the username
             List<Claim> userclaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, Username),
             };
-            //useroles needs to be added
+            //Needs to be reworked, as the key should be in appsettings rather than hardcoded
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisismySecretKey"));
             SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+
             JwtSecurityToken token = new JwtSecurityToken(
+                //Issuer and audience should be found in appsettings
                 issuer: "test",
                 audience: "test",
                 claims: userclaims,

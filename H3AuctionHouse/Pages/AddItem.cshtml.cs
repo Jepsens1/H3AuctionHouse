@@ -12,6 +12,7 @@ namespace H3AuctionHouse.Pages
     [Authorize]
     public class AddItemModel : PageModel
     {
+        
         [Required]
         [BindProperty]
         public string ProductName { get; set; }
@@ -21,9 +22,9 @@ namespace H3AuctionHouse.Pages
         public string Description { get; set; }
 
         //Used for error message on screen
-        public string Errormsg { get; set; }
+        public string ErrorMessage { get; set; }
 
-        //Used for setting when item should expire
+        //Used for setting when item should expire, default value is now + 10 minutes
         [BindProperty]
         public DateTime ExpireDate { get; set; } = DateTime.Now.AddMinutes(10);
 
@@ -31,6 +32,7 @@ namespace H3AuctionHouse.Pages
         public SelectList Categorys { get; set; } = new SelectList(Enum.GetValues(typeof(Category)).Cast<Category>());
 
         [BindProperty]
+        //Used for which category the item is
         //By default the value is first value of our dropdown menu
         public string SelectedCategory { get; set; }
 
@@ -38,25 +40,31 @@ namespace H3AuctionHouse.Pages
         public void OnGet()
         {
         }
+        /// <summary>
+        /// Method is called when user clicks submit button
+        /// Method creates new Item in database
+        /// </summary>
+        /// <returns></returns>
         public IActionResult OnPost()
         {
             try
             {
                 bool Iscreated = false;
-                //Gets our user by our session
+                //Gets user by session
                 UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
-
+                //Convets the SelectedCategory string to Enum
                 Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
+                //Checks to see if ProductName and Description is not empty or null
                 if(!string.IsNullOrEmpty(ProductName) && !string.IsNullOrEmpty(Description))
                 {
+                    //Gets true or false on if item is added to database
                      Iscreated = Program._auctionproductmanager.Create(new ProductModel<AuctionProductModel>(new AuctionProductModel(ProductName, Description, category
                     , Status.AVAILABLE, ExpireDate), user));
 
                 }
-
                 if (!Iscreated)
                 {
-                    Errormsg = "Could not create item";
+                    ErrorMessage = "Could not create item";
                     return Page();
                 }
                 return RedirectToPage("Index");
@@ -64,7 +72,7 @@ namespace H3AuctionHouse.Pages
             }
             catch (Exception e)
             {
-                Errormsg = "Could not create item";
+                ErrorMessage = "Could not create item";
                 Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "AddItem.OnPost()" + e.Message + e.StackTrace);
                 return Page();
             }

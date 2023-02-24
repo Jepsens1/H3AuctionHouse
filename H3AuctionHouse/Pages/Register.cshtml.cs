@@ -34,6 +34,7 @@ namespace H3AuctionHouse.Pages
         {
             try
             {
+                //If true returns to Login page
                 if (Program._loginManager.CreateAccount(new UserModel(Firstname, Lastname, Username, Email, Password)))
                 {
                     return RedirectToPage("Login");
