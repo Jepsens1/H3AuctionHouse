@@ -15,7 +15,7 @@ namespace AuctionHouseBackend.Managers
     /// </summary>
     public class AuctionProductManager : IProductManager<ProductModel<AuctionProductModel>>
     {
-        List<ProductModel<AuctionProductModel>> Products { get; set; }
+        public List<ProductModel<AuctionProductModel>> Products { get; set; }
         private DatabaseAuctionProduct databaseAuctionProduct;
         public AuctionProductManager(DatabaseAuctionProduct databaseAuctionProduct) 
         { 
@@ -101,7 +101,7 @@ namespace AuctionHouseBackend.Managers
                     }
                 }
 
-                Thread.Sleep(3000);
+                Thread.Sleep(2000);
             }
         }
     }
