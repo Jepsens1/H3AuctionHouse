@@ -6,15 +6,18 @@ using AuctionHouseBackend.Database;
 using AuctionHouseBackend.Managers;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Configuration;
+using AuctionHouseBackend.Interfaces;
+using AuctionHouseBackend.Models;
 
 namespace H3AuctionHouse
 {
     public class Program
     {
-        /*patrick*///static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
-        /*phillip*/ static string constring = "Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
-        public static LoginManager _loginManager = new LoginManager(new DatabaseLogin(constring));
+        /*patrick*/static string constring = "Server=DESKTOP-R394HDQ;Database=AuctionHouse;Trusted_Connection=True;";
+        /*phillip*/ //static string constring = "Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
+        public static AccountManager _loginManager = new AccountManager(new DatabaseLogin(constring));
         public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct(constring));
+        public static IEmailManager emailManager = new SMTPEmailManager();
         
         public static void StartStatusChangedEvent()
         {
@@ -41,17 +44,11 @@ namespace H3AuctionHouse
 
         private static void Product_OnStatusChanged(object? sender, object e)
         {
-            // fixed and works
-            string f = "";
-            if(f != string.Empty)
-            {
-
-            }
+            emailManager.SendMail(((ProductModel<AuctionProductModel>)e).Owner, "subject", "body");
         }
 
         public static void Main(string[] args)
         {
-
             StartStatusChangedEvent();
             StartOnProductCreatedEvent();
             var builder = WebApplication.CreateBuilder(args);
