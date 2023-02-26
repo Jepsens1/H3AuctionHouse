@@ -4,11 +4,11 @@ using AuctionHouseBackend.Models;
 
 namespace AuctionHouseBackend.Managers
 {
-    public class LoginManager
+    public class AccountManager
     {
         private DatabaseHelper databaseHandler;
 
-        public LoginManager(DatabaseHelper databaseHandler)
+        public AccountManager(DatabaseHelper databaseHandler)
         {
             this.databaseHandler = databaseHandler;
         }

@@ -14,7 +14,7 @@ namespace AuctionHouseBackend
         {
             AuctionProductManager product = new AuctionProductManager(new DatabaseAuctionProduct(con));
             CreateLoginUser("Jessen", "test1");
-            LoginManager login = new LoginManager(new DatabaseLogin(con));
+            AccountManager login = new AccountManager(new DatabaseLogin(con));
             UserModel user = login.GetUser("Jessen");
             auctionProducts = product.GetAll();
             for (int i = 0; i < auctionProducts.Count(); i++)
@@ -76,7 +76,7 @@ namespace AuctionHouseBackend
 
         static void CreateLoginUser(string username, string mail)
         {
-            LoginManager login = new LoginManager(new DatabaseLogin(con));
+            AccountManager login = new AccountManager(new DatabaseLogin(con));
             Console.Read();
             if (!login.CreateAccount(new Models.UserModel("Patrick", "Jessen", username, mail, "test1234")))
             {
