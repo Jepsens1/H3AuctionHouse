@@ -15,11 +15,21 @@ namespace H3AuctionHouse
     {
         /*patrick*/static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
         /*phillip*/ //static string constring = "Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
-        //public static AccountManager _loginManager = new AccountManager(new DatabaseLogin(constring));
-        //public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct(constring));
-        //public static IEmailManager emailManager = new SMTPEmailManager();
-        public static Manager manager = new Manager();
-        
+        public static Manager manager = new Manager(constring);
+
+        public static void StartOnPriceChangedEvent()
+        {
+            for (int i = 0; i < manager.Get<AuctionProductManager>().Products.Count; i++)
+            {
+                manager.Get<AuctionProductManager>().Products[i].Product.HighestBidder.OnPriceChanged += HighestBidder_OnPriceChanged;
+            }
+        }
+
+        private static void HighestBidder_OnPriceChanged(object? sender, object e)
+        {
+            
+        }
+
         public static void StartStatusChangedEvent()
         {
             for (int i = 0; i < manager.Get<AuctionProductManager>().Products.Count; i++)

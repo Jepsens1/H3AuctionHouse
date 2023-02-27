@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AuctionHouseBackend.Managers
 {
-    public class SMTPEmailManager : IEmailManager, IManager
+    public class SMTPEmailManager : IEmailManager
     {
 
         public void SendMail(UserModel to, string subject, string body)

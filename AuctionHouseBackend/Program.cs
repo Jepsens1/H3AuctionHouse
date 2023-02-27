@@ -5,6 +5,9 @@ using AuctionHouseBackend.Models;
 
 namespace AuctionHouseBackend
 {
+    /// <summary>
+    /// FOR TEST PURPOSE ONLY
+    /// </summary>
     internal class Program
     {
         static string con = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
@@ -12,10 +15,8 @@ namespace AuctionHouseBackend
         static List<ProductModel<AuctionProductModel>> auctionProducts;
         static void Main(string[] args)
         {
-            Manager manager = new Manager();
-            AuctionProductManager product = new AuctionProductManager(new DatabaseAuctionProduct(con));
-            manager.Add(product);
-            CreateLoginUser("Jessen", "test1");
+            Manager manager = new Manager(con);
+            CreateLoginUser(manager, "Jessen", "test1");
             AccountManager login = new AccountManager(new DatabaseLogin(con));
             UserModel user = login.GetUser("Jessen");
             auctionProducts = manager.Get<AuctionProductManager>().GetAll();
@@ -31,14 +32,14 @@ namespace AuctionHouseBackend
                 {
                     ProductModel<AuctionProductModel> model = new ProductModel<AuctionProductModel>(new Models.AuctionProductModel("test jessen2", "test jessen2",
                         Category.KID, Status.AVAILABLE, DateTime.Today), user);
-                    if (product.Create(model))
+                    if (manager.Get<AuctionProductManager>().Create(model))
                     {
                         Console.WriteLine("Product created");
                     }
                 }
                 else if (input == 2)
                 {
-                    List<ProductModel<AuctionProductModel>> products = product.GetUserProducts(user.Id);
+                    List<ProductModel<AuctionProductModel>> products = manager.Get<AuctionProductManager>().GetUserProducts(user.Id);
                     for (int i = 0; i < products.Count(); i++)
                     {
                         Console.WriteLine(products[i].Product.ToString());
@@ -46,7 +47,7 @@ namespace AuctionHouseBackend
                 }
                 else if (input == 3)
                 {
-                    List<ProductModel<AuctionProductModel>> products = product.GetAll();
+                    List<ProductModel<AuctionProductModel>> products = manager.Get<AuctionProductManager>().GetAll();
                     for (int i = 0; i < products.Count(); i++)
                     {
                         Console.WriteLine(products[i].Product.ToString());
@@ -76,11 +77,10 @@ namespace AuctionHouseBackend
             Console.WriteLine("price changed item id: " + ((ProductModel<AuctionProductModel>)e).Product.Id);
         }
 
-        static void CreateLoginUser(string username, string mail)
+        static void CreateLoginUser(Manager manager, string username, string mail)
         {
-            AccountManager login = new AccountManager(new DatabaseLogin(con));
             Console.Read();
-            if (!login.CreateAccount(new Models.UserModel("Patrick", "Jessen", username, mail, "test1234")))
+            if (!manager.Get<AccountManager>().CreateAccount(new Models.UserModel("Patrick", "Jessen", username, mail, "test1234")))
             {
                 Console.WriteLine("Username already exists");
                 Console.Read();

@@ -188,6 +188,37 @@ namespace AuctionHouseBackend.Database
             CloseConnection();
         }
 
+        public void AddAutobid(int userId, int productId, decimal price, decimal autobidPrice, decimal maximumPrice)
+        {
+            OpenConnection();
+            string query = $"INSERT INTO Bids(productId, userId, price, autobidPrice, maximumPrice) VALUES(@productId, @userId, @price, @autobidPrice, @maxumumPrice)";
+            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlDataCommand.Parameters.AddWithValue("@productId", productId);
+            SqlDataCommand.Parameters.AddWithValue("@userId", userId);
+            SqlDataCommand.Parameters.AddWithValue("@price", price);
+            SqlDataCommand.Parameters.AddWithValue("@autobidPrice", autobidPrice);
+            SqlDataCommand.Parameters.AddWithValue("@maximumPrice", maximumPrice);
+            SqlDataReader = SqlDataCommand.ExecuteReader();
+            CloseConnection();
+        }
+
+        public List<AutobidModel> GetAutobid(int userId, int productId)
+        {
+            OpenConnection();
+            string query = $"SELECT * FROM Bids WHERE userId = @userId AND productId = @productId";
+            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlDataCommand.Parameters.AddWithValue("@productId", productId);
+            SqlDataCommand.Parameters.AddWithValue("@userId", userId);
+            SqlDataReader = SqlDataCommand.ExecuteReader();
+            List<AutobidModel> models = new List<AutobidModel>();
+            while (SqlDataReader.Read())
+            {
+                models.Add(new AutobidModel(Convert.ToDecimal(SqlDataReader["autobidPrice"]), Convert.ToDecimal(SqlDataReader["maximumPrice"])));
+            }
+            CloseConnection();
+            return models;
+        }
+
         public void ChangeStatus(int productId, Status status)
         {
             OpenConnection();
@@ -197,11 +228,6 @@ namespace AuctionHouseBackend.Database
             SqlDataCommand.Parameters.AddWithValue("@id", productId);
             SqlDataReader = SqlDataCommand.ExecuteReader();
             CloseConnection();
-        }
-
-        public ProductModel<AuctionProductModel> GetProduct(Category category)
-        {
-            throw new NotImplementedException();
         }
 
         private UserModel GetUserFromProductId(int id)

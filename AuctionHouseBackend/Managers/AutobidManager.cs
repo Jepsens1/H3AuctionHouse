@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AuctionHouseBackend.Interfaces
+namespace AuctionHouseBackend.Managers
 {
-    public interface IManager
+    internal class AutobidManager
     {
     }
 }

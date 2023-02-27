@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace AuctionHouseBackend.Managers
 {
+    /// <summary>
+    /// Manager class that collects all the managers for easy access
+    /// </summary>
     public class Manager
     {
         List<object> managers;
@@ -20,6 +23,11 @@ namespace AuctionHouseBackend.Managers
             Add<SMTPEmailManager>(new SMTPEmailManager());
         }
 
+        /// <summary>
+        /// Get a manager object of type specified
+        /// </summary>
+        /// <typeparam name="T">Type of manager object</typeparam>
+        /// <returns>the manager object</returns>
         public T? Get<T>()
         {
             for (int i = 0; i < managers.Count; i++)
