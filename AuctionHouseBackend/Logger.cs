@@ -13,6 +13,10 @@ namespace AuctionHouseBackend
         WARNING,
         ERROR
     }
+    /// <summary>
+    /// This object adds to a log file whenever we call AddLog()
+    /// TODO:: Should implement that it creates a new log file everyday to avoid one large txt file
+    /// </summary>
     public class Logger
     {
         public static void AddLog(LogLevel level, string message)

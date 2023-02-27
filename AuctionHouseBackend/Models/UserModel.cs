@@ -28,13 +28,6 @@ namespace AuctionHouseBackend.Models
             Password = password;
         }
 
-        // Used to login a user
-        public UserModel(string username, HashModel hash) 
-        { 
-            Username = username;
-            Hash = hash;
-        }
-
         public UserModel(int id)
         {
             Id = id;
