@@ -45,7 +45,6 @@ namespace H3AuctionHouse.Pages
             {
                 Errormsg = "Something went wrong";
                 Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "UserItem.OnGet()" + e.Message + e.StackTrace);
-                throw;
             }
            
         }

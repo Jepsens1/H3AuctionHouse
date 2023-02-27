@@ -1,3 +1,4 @@
+using AuctionHouseBackend;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -14,10 +15,10 @@ namespace H3AuctionHouse.Pages
                 Response.Cookies.Delete("token");
                 return RedirectToPage("Index");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "Logout.OnGet()" + e.Message + e.StackTrace);
+                return RedirectToPage("Index");
             }
         }
     }
