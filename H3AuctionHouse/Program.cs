@@ -13,7 +13,7 @@ namespace H3AuctionHouse
 {
     public class Program
     {
-        /*patrick*/static string constring = "Server=DESKTOP-R394HDQ;Database=AuctionHouse;Trusted_Connection=True;";
+        /*patrick*/static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
         /*phillip*/ //static string constring = "Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
         public static AccountManager _loginManager = new AccountManager(new DatabaseLogin(constring));
         public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct(constring));

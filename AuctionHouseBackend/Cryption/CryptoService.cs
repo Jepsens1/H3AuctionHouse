@@ -13,7 +13,7 @@ namespace AuctionHouseBackend.Cryption
         }
         public static HashModel SaltPassword(string password)
         {
-            byte[] saltBytes = new byte[10];
+            byte[] saltBytes = new byte[16];
             RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
             provider.GetNonZeroBytes(saltBytes);
             string salt = Convert.ToBase64String(saltBytes);

@@ -1,1 +1,5 @@
-24-02-2023 12:56:13 ERROR AddAll() ExecuteReader requires an open and available Connection. The connection's current state is closed.
+27-02-2023 10:19:18 ERROR Login.OnPost()The input is not a valid Base-64 string as it contains a non-base 64 character, more than two padding characters, or an illegal character among the padding characters.   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at AuctionHouseBackend.Cryption.CryptoService.VerifyPassword(String password, String storedHash, String storedSalt) in C:\Users\pjj\source\repos\H3AuctionHouse\AuctionHouseBackend\Cryption\CryptoService.cs:line 10
+   at AuctionHouseBackend.Managers.AccountManager.Login(String username, String password) in C:\Users\pjj\source\repos\H3AuctionHouse\AuctionHouseBackend\Managers\AccountManager.cs:line 28
+   at H3AuctionHouse.Pages.LoginModel.OnPost() in C:\Users\pjj\source\repos\H3AuctionHouse\H3AuctionHouse\Pages\Login.cshtml.cs:line 35
