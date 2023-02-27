@@ -37,6 +37,11 @@
                     <input asp-for="@Model.Password">
                 </div>
                 <div>
+                    <label asp-for="@Model.ConfirmPassword"></label>
+                    @*Value will be binded to our ConfirmPassword property*@
+                    <input asp-for="@Model.ConfirmPassword">
+                </div>
+                <div>
                     <button type="submit">Log in</button>
                 </div>
             </form>
