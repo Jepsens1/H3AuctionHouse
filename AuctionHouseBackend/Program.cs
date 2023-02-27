@@ -12,11 +12,13 @@ namespace AuctionHouseBackend
         static List<ProductModel<AuctionProductModel>> auctionProducts;
         static void Main(string[] args)
         {
+            Manager manager = new Manager();
             AuctionProductManager product = new AuctionProductManager(new DatabaseAuctionProduct(con));
+            manager.Add(product);
             CreateLoginUser("Jessen", "test1");
             AccountManager login = new AccountManager(new DatabaseLogin(con));
             UserModel user = login.GetUser("Jessen");
-            auctionProducts = product.GetAll();
+            auctionProducts = manager.Get<AuctionProductManager>().GetAll();
             for (int i = 0; i < auctionProducts.Count(); i++)
             {
                 auctionProducts[i].Product.HighestBidder.OnPriceChanged += HighestBidder_OnPriceChanged;
@@ -53,7 +55,7 @@ namespace AuctionHouseBackend
                 }
                 else if (input == 4)
                 {
-                    product.BidOnProduct(user.Id, GetProductFromId(1), 700);
+                    manager.Get<AuctionProductManager>().BidOnProduct(user.Id, GetProductFromId(1), 700);
                 }
             }
             

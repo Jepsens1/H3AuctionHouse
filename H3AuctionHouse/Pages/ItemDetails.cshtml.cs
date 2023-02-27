@@ -1,5 +1,6 @@
 using AuctionHouseBackend;
 using AuctionHouseBackend.Interfaces;
+using AuctionHouseBackend.Managers;
 using AuctionHouseBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace H3AuctionHouse.Pages
             try
             {
                 //Gets items with the id from our details page
-                Item = Program._auctionproductmanager.GetProduct(id);
+                Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
             }
             catch (Exception)
             {
@@ -36,11 +37,11 @@ namespace H3AuctionHouse.Pages
             //The way we update Item is kinda stupid, idealy we want to bind the Item property, but it will be null for some reason
             //So the way we update Item needs to be refined
             //This is just to make it work
-            Item = Program._auctionproductmanager.GetProduct(id);
+            Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
             UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
-            ResponseCode response = Program._auctionproductmanager.BidOnProduct(user.Id, Item, BidValue);
+            ResponseCode response = Program.manager.Get<AuctionProductManager>().BidOnProduct(user.Id, Item, BidValue);
             DisplayResponse(response);
-            Item = Program._auctionproductmanager.GetProduct(id);
+            Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
         }
         /// <summary>
         /// Used to display message if bid is accepted or not

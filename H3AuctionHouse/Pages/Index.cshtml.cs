@@ -1,5 +1,6 @@
 ﻿using AuctionHouseBackend;
 using AuctionHouseBackend.Interfaces;
+using AuctionHouseBackend.Managers;
 using AuctionHouseBackend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -35,14 +36,14 @@ namespace H3AuctionHouse.Pages
             try
             {
                 //Gets all items
-                Items = Program._auctionproductmanager.GetAll();
+                Items = Program.manager.Get<AuctionProductManager>().GetAll();
                 //If user selects category
                 if (!string.IsNullOrEmpty(SelectedCategory))
                 {
                     //Converts value from dropdown to enum
                     Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
                     //Finds all items with category selected
-                    Items = Program._auctionproductmanager.GetProduct(category);
+                    Items = Program.manager.Get<AuctionProductManager>().GetProduct(category);
                 }
             }
             catch (Exception e)

@@ -15,36 +15,37 @@ namespace H3AuctionHouse
     {
         /*patrick*/static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
         /*phillip*/ //static string constring = "Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
-        public static AccountManager _loginManager = new AccountManager(new DatabaseLogin(constring));
-        public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct(constring));
-        public static IEmailManager emailManager = new SMTPEmailManager();
+        //public static AccountManager _loginManager = new AccountManager(new DatabaseLogin(constring));
+        //public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct(constring));
+        //public static IEmailManager emailManager = new SMTPEmailManager();
+        public static Manager manager = new Manager();
         
         public static void StartStatusChangedEvent()
         {
-            for (int i = 0; i < _auctionproductmanager.Products.Count; i++)
+            for (int i = 0; i < manager.Get<AuctionProductManager>().Products.Count; i++)
             {
-                _auctionproductmanager.Products[i].Product.OnStatusChanged += Product_OnStatusChanged;
+                manager.Get<AuctionProductManager>().Products[i].Product.OnStatusChanged += Product_OnStatusChanged;
             }
            
         }
 
         public static void StartOnProductCreatedEvent()
         {
-            _auctionproductmanager.OnProductCreated += _auctionproductmanager_OnProductCreated;
+            manager.Get<AuctionProductManager>().OnProductCreated += _auctionproductmanager_OnProductCreated;
         }
 
         private static void _auctionproductmanager_OnProductCreated(object? sender, object e)
         {
-            for (int i = 0; i < _auctionproductmanager.Products.Count; i++)
+            for (int i = 0; i < manager.Get<AuctionProductManager>().Products.Count; i++)
             {
-                _auctionproductmanager.Products[i].Product.OnStatusChanged -= Product_OnStatusChanged;
-                _auctionproductmanager.Products[i].Product.OnStatusChanged += Product_OnStatusChanged;
+                manager.Get<AuctionProductManager>().Products[i].Product.OnStatusChanged -= Product_OnStatusChanged;
+                manager.Get<AuctionProductManager>().Products[i].Product.OnStatusChanged += Product_OnStatusChanged;
             }
         }
 
         private static void Product_OnStatusChanged(object? sender, object e)
         {
-            emailManager.SendMail(((ProductModel<AuctionProductModel>)e).Owner, "subject", "body");
+            manager.Get<SMTPEmailManager>().SendMail(((ProductModel<AuctionProductModel>)e).Owner, "subject", "body");
         }
 
         public static void Main(string[] args)

@@ -1,5 +1,6 @@
 using AuctionHouseBackend;
 using AuctionHouseBackend.Interfaces;
+using AuctionHouseBackend.Managers;
 using AuctionHouseBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,14 +31,14 @@ namespace H3AuctionHouse.Pages
                 //Gets user from session
                 UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
                 //Gets the Users Items with user id
-                UserItems = Program._auctionproductmanager.GetUserProducts(user.Id);
+                UserItems = Program.manager.Get<AuctionProductManager>().GetUserProducts(user.Id);
                 //If user selects category
                 if (!string.IsNullOrEmpty(SelectedCategory))
                 {
                     //Converts value from dropdownmenu to enum
                     Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
                     //Gets users items with category selected
-                    UserItems = Program._auctionproductmanager.GetProduct(category);
+                    UserItems = Program.manager.Get<AuctionProductManager>().GetProduct(category);
                 }
             }
             catch (Exception e)

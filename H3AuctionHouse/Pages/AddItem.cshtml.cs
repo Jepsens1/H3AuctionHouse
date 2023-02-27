@@ -6,6 +6,7 @@ using AuctionHouseBackend.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using AuctionHouseBackend.Interfaces;
 using AuctionHouseBackend;
+using AuctionHouseBackend.Managers;
 
 namespace H3AuctionHouse.Pages
 {
@@ -58,7 +59,7 @@ namespace H3AuctionHouse.Pages
                 if(!string.IsNullOrEmpty(ProductName) && !string.IsNullOrEmpty(Description))
                 {
                     //Gets true or false on if item is added to database
-                     Iscreated = Program._auctionproductmanager.Create(new ProductModel<AuctionProductModel>(new AuctionProductModel(ProductName, Description, category
+                     Iscreated = Program.manager.Get<AuctionProductManager>().Create(new ProductModel<AuctionProductModel>(new AuctionProductModel(ProductName, Description, category
                     , Status.AVAILABLE, ExpireDate), user));
 
                 }
