@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using AuctionHouseBackend.Models;
 using AuctionHouseBackend;
+using AuctionHouseBackend.Managers;
 
 namespace H3AuctionHouse.Pages
 {
@@ -32,7 +33,7 @@ namespace H3AuctionHouse.Pages
             try
             {
                 //Tries to login
-                UserModel user = Program._loginManager.Login(Username, Password);
+                UserModel user = Program.manager.Get<AccountManager>().Login(Username, Password);
                 if (user != null)
                 {
                     //Sets session with our user object
