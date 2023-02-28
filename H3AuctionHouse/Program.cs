@@ -13,12 +13,12 @@ namespace H3AuctionHouse
 {
     public class Program
     {
-        /*patrick*/static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
-        /*phillip*/ //static string constring = "Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
+        /*patrick*///static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
+        /*phillip*/ static string constring = "Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
         //public static AccountManager _loginManager = new AccountManager(new DatabaseLogin(constring));
         //public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct(constring));
         //public static IEmailManager emailManager = new SMTPEmailManager();
-        public static Manager manager = new Manager();
+        public static Manager manager = new Manager(constring);
         
         public static void StartStatusChangedEvent()
         {
@@ -56,11 +56,12 @@ namespace H3AuctionHouse
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddScoped<IInputSanitizer, InputSanitizer>();
             builder.Services.AddSession(options =>
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-
+                options.Cookie.SameSite = SameSiteMode.Lax;
                 options.Cookie.Name = "AuctionSession";
                
             });
