@@ -13,7 +13,8 @@ namespace H3AuctionHouse.Pages
                 //Removes session and deletes cookie
                 HttpContext.Session.Remove("user");
                 Response.Cookies.Delete("token");
-                return RedirectToPage("Index");
+                Response.Headers.Remove("Authorization");
+                return RedirectToPage("Login");
             }
             catch (Exception e)
             {
