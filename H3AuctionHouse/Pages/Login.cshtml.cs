@@ -24,11 +24,14 @@ namespace H3AuctionHouse.Pages
         public string Password { get; set; }
 
         public string Errormsg { get; set; }
-        private IInputSanitizer _saniz;
 
-        public LoginModel(IInputSanitizer sanitizer)
+        private IInputSanitizer _saniz;
+        private ITokenService _service;
+
+        public LoginModel(IInputSanitizer sanitizer, ITokenService service)
         {
             _saniz = sanitizer;
+            _service = service;
         }
 
         public void OnGet()
@@ -50,7 +53,7 @@ namespace H3AuctionHouse.Pages
                     //Sets session with our user object
                     HttpContext.Session.SetObjectAsJson("user", user);
                     //Builds a JWT token
-                    string token = BuildToken();
+                    string token = _service.BuildToken(user.Username);
                     CookieOptions options = new CookieOptions
                     {
                         Secure = true,
@@ -74,33 +77,6 @@ namespace H3AuctionHouse.Pages
                 return Page();
             }
           
-        }
-        /// <summary>
-        /// This method returns a JWT token as string
-        /// </summary>
-        /// <returns></returns>
-        private string BuildToken()
-        {
-            //JWT token will contain the username
-            List<Claim> userclaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, Username),
-            };
-            //Needs to be reworked, as the key should be in appsettings rather than hardcoded
-            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisismySecretKey"));
-            SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-
-            JwtSecurityToken token = new JwtSecurityToken(
-                //Issuer and audience should be found in appsettings
-                issuer: "test",
-                audience: "test",
-                claims: userclaims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: credentials
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

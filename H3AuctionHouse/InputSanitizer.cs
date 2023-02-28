@@ -20,11 +20,9 @@ namespace H3AuctionHouse
             {
                 HtmlSanitizer sanitizer = new HtmlSanitizer();
                 model.Username = sanitizer.Sanitize(model.Username);
-                model.Password = sanitizer.Sanitize(model.Password);
                 model.FirstName = sanitizer.Sanitize(model.FirstName);
                 model.LastName = sanitizer.Sanitize(model.LastName);
                 model.Email = sanitizer.Sanitize(model.Email);
-
                 return model;
             }
             catch (Exception e)

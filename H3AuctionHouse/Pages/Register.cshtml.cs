@@ -14,7 +14,7 @@ namespace H3AuctionHouse.Pages
         public string Username { get; set; }
 
         [Required]
-        [BindProperty, StringLength(20, MinimumLength = 5, ErrorMessage = "Password no longer than 16 and less than 8")]
+        [BindProperty, StringLength(20, MinimumLength = 8, ErrorMessage = "Password no longer than 16 and less than 8")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

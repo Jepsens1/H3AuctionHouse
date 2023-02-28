@@ -57,6 +57,7 @@ namespace H3AuctionHouse
             builder.Services.AddRazorPages();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddScoped<IInputSanitizer, InputSanitizer>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddSession(options =>
             {
                 options.Cookie.HttpOnly = true;
@@ -81,7 +82,7 @@ namespace H3AuctionHouse
                     (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = false,
+                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true
                 };
             });
@@ -109,7 +110,19 @@ namespace H3AuctionHouse
                 var token = context.Request.Cookies["token"];
                 if (!string.IsNullOrEmpty(token))
                 {
-                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    ITokenService service = new TokenService();
+                    //Validates token
+                    //This needs to be reworked
+                    if(!service.ValidateToken(token))
+                    {
+                        //Redirects to Logout Page if token has expired
+                        context.Response.Redirect("Logout");
+                    }
+                    else
+                    {
+                        //Adds token to header
+                        context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    }
                 }
                 await next();
             });
