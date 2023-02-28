@@ -20,6 +20,7 @@ namespace H3AuctionHouse.Pages
 
         //Used to compare Password property and ConfirmPassword property
         [BindProperty, Required, Compare(nameof(Password))]
+        [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
         [Required]
         [BindProperty]
@@ -39,6 +40,10 @@ namespace H3AuctionHouse.Pages
         {
             try
             {
+                if(!ModelState.IsValid)
+                {
+                    return Page();
+                }
                 //If true returns to Login page
                 if (Program.manager.Get<AccountManager>().CreateAccount(new UserModel(Firstname, Lastname, Username, Email, Password)))
                 {

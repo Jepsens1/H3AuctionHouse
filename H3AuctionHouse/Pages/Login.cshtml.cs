@@ -24,6 +24,12 @@ namespace H3AuctionHouse.Pages
         public string Password { get; set; }
 
         public string Errormsg { get; set; }
+        private IInputSanitizer _saniz;
+
+        public LoginModel(IInputSanitizer sanitizer)
+        {
+            _saniz = sanitizer;
+        }
 
         public void OnGet()
         {
@@ -32,10 +38,15 @@ namespace H3AuctionHouse.Pages
         {
             try
             {
+                if(!ModelState.IsValid)
+                {
+                    return Page();
+                }
                 //Tries to login
                 UserModel user = Program.manager.Get<AccountManager>().Login(Username, Password);
                 if (user != null)
                 {
+                    user = _saniz.SanitizeInputLogin(user);
                     //Sets session with our user object
                     HttpContext.Session.SetObjectAsJson("user", user);
                     //Builds a JWT token
@@ -44,6 +55,7 @@ namespace H3AuctionHouse.Pages
                     {
                         Secure = true,
                         HttpOnly = true,
+                        SameSite = SameSiteMode.Strict,
                     };
                     //Creates a cookie with our jwt used for authorization
                     Response.Cookies.Append("token", token, options);

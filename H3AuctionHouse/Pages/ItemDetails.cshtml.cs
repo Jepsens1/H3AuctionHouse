@@ -26,6 +26,11 @@ namespace H3AuctionHouse.Pages
             {
                 //Gets items with the id from our details page
                 Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
+                if(Item == null)
+                {
+                    Msg = "Could not get Item";
+                    throw new Exception("Could not fetch item");
+                }
             }
             catch (Exception e)
             {
