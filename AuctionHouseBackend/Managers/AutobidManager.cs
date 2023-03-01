@@ -11,17 +11,13 @@ namespace AuctionHouseBackend.Managers
 {
     public class AutobidManager
     {
-        public List<AutobidModel> Autobids { get; set; }
+        public List<AutobidModel> AutobidModels { get; set; }
         private DatabaseAuctionProduct databaseAuctionProduct;
-        private List<ProductModel<AuctionProductModel>> products;
 
-        public AutobidManager(DatabaseAuctionProduct databaseAuctionProduct, AuctionProductManager productManager)
+        public AutobidManager(DatabaseAuctionProduct databaseAuctionProduct)
         {
             this.databaseAuctionProduct = databaseAuctionProduct;
-            this.products = productManager.Products;
-            Autobids = databaseAuctionProduct.GetAutobids();
-            Thread t = new Thread(() => Autobid(productManager));
-            t.Start();
+            AutobidModels = databaseAuctionProduct.GetAutobids();
         }
 
         public void AddAutobid(int userId, int productId, decimal price, decimal autobidPrice, decimal maximumPrice)
@@ -33,35 +29,26 @@ namespace AuctionHouseBackend.Managers
             }
         }
 
-        public void Autobid(AuctionProductManager productManager)
+        public void Autobid(AuctionProductManager productManager, ProductModel<AuctionProductModel> product)
         {
-            while (true)
+            if (AutobidModels.Count <= 0)
             {
-                for (int i = 0; i < products.Count; i++)
+                return;
+            }
+            AutobidModel highestBidder = AutobidModels[0];
+            for (int i = 0; i < AutobidModels.Count; i++)
+            {
+                if (highestBidder.AutobidPrice < AutobidModels[i].AutobidPrice && highestBidder.AutobidMax >= product.Product.HighestBidder.Price)
                 {
-                    for (int j = 0; j < Autobids.Count; j++)
-                    {
-                        if (Autobids[j].ProductId == products[i].Product.Id)
-                        {
-                            decimal price = GetAutobidPrice(i, j);
-                            if (price > 0 && price > products[i].Product.HighestBidder.Price)
-                            {
-                                productManager.BidOnProduct(Autobids[j].UserId, products[i], price);
-                                Thread.Sleep(2000);
-                            }
-                        }
-                    }
+                    highestBidder = AutobidModels[i];
                 }
             }
-        }
-
-        private decimal GetAutobidPrice(int i, int j)
-        {
-            if (Autobids[j].AutobidMax > products[i].Product.HighestBidder.Price)
+            if (product.Product.HighestBidder.User.Id == highestBidder.UserId)
             {
-                return Autobids[j].AutobidPrice + products[i].Product.HighestBidder.Price;
+                return;
             }
-            return -1;
+            decimal finalPrice = highestBidder.AutobidPrice + product.Product.HighestBidder.Price;
+            productManager.BidOnProduct(highestBidder.UserId, product, finalPrice);
         }
     }
 }
