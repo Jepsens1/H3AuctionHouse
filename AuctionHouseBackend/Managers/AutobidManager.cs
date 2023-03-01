@@ -20,18 +20,9 @@ namespace AuctionHouseBackend.Managers
         {
             this.databaseAuctionProduct = databaseAuctionProduct;
             this.products = productManager.Products;
-            Autobids = databaseAuctionProduct.GetAutobids();
+            Autobids = databaseAuctionProduct.GetAutobids().Result;
             Thread t = new Thread(() => Autobid(productManager));
             t.Start();
-        }
-
-        public void AddAutobid(int userId, int productId, decimal price, decimal autobidPrice, decimal maximumPrice)
-        {
-            ProductModel<AuctionProductModel> product = databaseAuctionProduct.GetProduct(productId);
-            if (product.Product.HighestBidder.Price < price)
-            {
-                databaseAuctionProduct.AddAutobid(userId, productId, price, autobidPrice, maximumPrice);
-            }
         }
 
         public void Autobid(AuctionProductManager productManager)
@@ -48,12 +39,12 @@ namespace AuctionHouseBackend.Managers
                             if (price > 0 && price > products[i].Product.HighestBidder.Price)
                             {
                                 productManager.BidOnProduct(Autobids[j].UserId, products[i], price);
-                                Thread.Sleep(2000);
-                                break;
+                                //break;
                             }
                         }
                     }
                 }
+                Thread.Sleep(2000);
             }
         }
 
