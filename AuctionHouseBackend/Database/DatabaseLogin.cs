@@ -44,7 +44,7 @@ namespace AuctionHouseBackend.Database
                 SqlDataCommand.Parameters.AddWithValue("@firstName", user.FirstName);
                 SqlDataCommand.Parameters.AddWithValue("@lastName", user.LastName);
                 SqlDataCommand.Parameters.AddWithValue("@email", user.Email);
-                SqlDataCommand.ExecuteScalar();
+                await SqlDataCommand.ExecuteScalarAsync();
                 CloseConnection();
                 CreateSalt(user);
                 return true;
@@ -61,7 +61,7 @@ namespace AuctionHouseBackend.Database
             SqlDataCommand.Parameters.AddWithValue("@hash", hash.Hash);
             SqlDataCommand.Parameters.AddWithValue("@salt", hash.Salt);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
-            SqlDataCommand.ExecuteScalar();
+            await SqlDataCommand.ExecuteScalarAsync();
             CloseConnection();
         }
 
@@ -71,7 +71,7 @@ namespace AuctionHouseBackend.Database
             string query = $"SELECT * FROM Hashes WHERE id = @id";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             if (SqlDataReader.Read())
             {
                 HashModel hash = new HashModel(SqlDataReader["hash"].ToString(), SqlDataReader["Salt"].ToString());
@@ -91,7 +91,7 @@ namespace AuctionHouseBackend.Database
             SqlDataCommand.Parameters.AddWithValue("@hash", user.Hash.Hash);
             SqlDataCommand.Parameters.AddWithValue("@salt", user.Hash.Salt);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
-            SqlDataCommand.ExecuteScalar();
+            await SqlDataCommand.ExecuteScalarAsync();
             CloseConnection();
         }
     }

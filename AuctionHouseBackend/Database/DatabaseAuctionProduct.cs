@@ -56,7 +56,7 @@ namespace AuctionHouseBackend.Database
                 OpenConnection();
                 string query = $"SELECT * FROM AuctionProducts";
                 SqlDataCommand = new SqlCommand(query, SqlConnect);
-                SqlDataReader = SqlDataCommand.ExecuteReader();
+                SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
                 while (SqlDataReader.Read())
                 {
                     products.Add(GetProductHelper());
@@ -85,7 +85,7 @@ namespace AuctionHouseBackend.Database
                 string query = $"SELECT * FROM AuctionProducts WHERE productId = @id";
                 SqlDataCommand = new SqlCommand(query, SqlConnect);
                 SqlDataCommand.Parameters.AddWithValue("@id", productId);
-                SqlDataReader = SqlDataCommand.ExecuteReader();
+                SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
                 ProductModel<AuctionProductModel>? product = null;
                 if (SqlDataReader.Read())
                 {
@@ -119,10 +119,10 @@ namespace AuctionHouseBackend.Database
                 string query = $"INSERT INTO Product(userId) VALUES (@ownerId)";
                 SqlDataCommand = new SqlCommand(query, SqlConnect);
                 SqlDataCommand.Parameters.AddWithValue("@ownerId", product.Owner.Id);
-                SqlDataCommand.ExecuteScalar();
+                await SqlDataCommand.ExecuteScalarAsync();
                 string query2 = $"SELECT TOP 1 * FROM Product ORDER BY id DESC ";
                 SqlDataCommand.CommandText = query2;
-                int productId = Convert.ToInt32(SqlDataCommand.ExecuteScalar());
+                int productId = Convert.ToInt32(await SqlDataCommand.ExecuteScalarAsync());
                 string query3 = $"INSERT INTO AuctionProducts(productId, productName, productDescription, productStatus, productCategory, expireryDate) VALUES (@productId, @productName," +
                     $" @productDescription, @productStatus, @productCategory, @productExpireDate)";
                 SqlDataCommand.CommandText = query3;
@@ -132,7 +132,7 @@ namespace AuctionHouseBackend.Database
                 SqlDataCommand.Parameters.AddWithValue("@productStatus", (int)product.Product.Status);
                 SqlDataCommand.Parameters.AddWithValue("@productCategory", (int)product.Product.Category);
                 SqlDataCommand.Parameters.AddWithValue("@productExpireDate", sqlFormattedDate);
-                SqlDataCommand.ExecuteNonQuery();
+                await SqlDataCommand.ExecuteNonQueryAsync();
                 CloseConnection();
 
             }
@@ -154,7 +154,7 @@ namespace AuctionHouseBackend.Database
                 string query = $"SELECT * FROM AuctionProducts WHERE productId = @id";
                 SqlDataCommand = new SqlCommand(query, SqlConnect);
                 SqlDataCommand.Parameters.AddWithValue("@id", productId);
-                SqlDataReader = SqlDataCommand.ExecuteReader();
+                SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
                 List<ProductModel<AuctionProductModel>> products = new List<ProductModel<AuctionProductModel>>();
                 while (SqlDataReader.Read())
                 {
@@ -185,7 +185,7 @@ namespace AuctionHouseBackend.Database
             SqlDataCommand.Parameters.AddWithValue("@userId", userId);
             SqlDataCommand.Parameters.AddWithValue("@price", price);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             CloseConnection();
         }
 
@@ -197,7 +197,7 @@ namespace AuctionHouseBackend.Database
             string sqlFormattedDate = expireTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
             SqlDataCommand.Parameters.AddWithValue("@expireryDate", sqlFormattedDate);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             CloseConnection();
         }
 
@@ -210,7 +210,7 @@ namespace AuctionHouseBackend.Database
             SqlDataCommand.Parameters.AddWithValue("@userId", userId);
             SqlDataCommand.Parameters.AddWithValue("@autobidPrice", autobidPrice);
             SqlDataCommand.Parameters.AddWithValue("@maximumPrice", maximumPrice);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             CloseConnection();
         }
 
@@ -219,7 +219,7 @@ namespace AuctionHouseBackend.Database
             OpenConnection();
             string query = $"SELECT * FROM Bids";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             List<AutobidModel> models = new List<AutobidModel>();
             while (SqlDataReader.Read())
             {
@@ -238,7 +238,7 @@ namespace AuctionHouseBackend.Database
             SqlDataCommand.Parameters.AddWithValue("@userId", userId);
             SqlDataCommand.Parameters.AddWithValue("@autobidPrice", autobidPrice);
             SqlDataCommand.Parameters.AddWithValue("@maximumPrice", maximumPrice);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             CloseConnection();
         }
 
@@ -251,7 +251,7 @@ namespace AuctionHouseBackend.Database
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@status", status);
             SqlDataCommand.Parameters.AddWithValue("@id", productId);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             CloseConnection();
         }
 
@@ -262,7 +262,7 @@ namespace AuctionHouseBackend.Database
             string query = $"SELECT userId FROM Product WHERE id = @id";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             if (SqlDataReader.Read())
             {
                 userId = Convert.ToInt32(SqlDataReader["userId"]);
@@ -278,7 +278,7 @@ namespace AuctionHouseBackend.Database
             string query = $"SELECT id FROM Product WHERE userId = @id";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@id", userId);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             if (SqlDataReader.Read())
             {
                 id = Convert.ToInt32(SqlDataReader["id"]);
