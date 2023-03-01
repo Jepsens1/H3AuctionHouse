@@ -5,6 +5,7 @@ namespace H3AuctionHouse
 {
     /// <summary>
     /// This Class is used to sanitize the UserModel from database, before we output to website
+    /// Uses HtmlSanitizer nuget package
     /// </summary>
     public class InputSanitizer : IInputSanitizer
     {
