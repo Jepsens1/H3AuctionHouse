@@ -17,6 +17,7 @@ GO
 
 USE AuctionHouse 
 GO
+
 CREATE TABLE Users
 (
 	id int IDENTITY(1,1) PRIMARY KEY,
@@ -49,4 +50,13 @@ CREATE TABLE AuctionProducts
 	expireryDate varchar(255) NOT NULL,
 	highestBidderId int,
 	price decimal
+)
+
+CREATE TABLE Bids
+(
+	productId int FOREIGN KEY REFERENCES Product(id),
+	userId int FOREIGN KEY REFERENCES Users(id),
+	price decimal,
+	autobidPrice decimal,
+	maximumPrice decimal
 )
