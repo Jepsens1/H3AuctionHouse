@@ -81,7 +81,7 @@ namespace AuctionHouseBackend.Database
             return null;
         }
 
-        protected UserModel? GetUser(int id)
+        public UserModel? GetUser(int id)
         {
             OpenConnection();
             string query = $"SELECT * FROM Users WHERE id = @id";

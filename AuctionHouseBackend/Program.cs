@@ -5,23 +5,23 @@ using AuctionHouseBackend.Models;
 
 namespace AuctionHouseBackend
 {
+    /// <summary>
+    /// FOR TEST PURPOSE ONLY
+    /// </summary>
     internal class Program
     {
         static string con = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
         //static string con = "Server=DESKTOP-R394HDQ;Database=AuctionHouse;Trusted_Connection=True;";
-        static List<ProductModel<AuctionProductModel>> auctionProducts;
+        static Manager manager = new Manager(con);
+        static AccountManager login = new AccountManager(new DatabaseLogin(con));
+        static UserModel user = login.GetUser("Jessen2");
         static void Main(string[] args)
         {
-            Manager manager = new Manager();
-            AuctionProductManager product = new AuctionProductManager(new DatabaseAuctionProduct(con));
-            manager.Add(product);
-            CreateLoginUser("Jessen", "test1");
-            AccountManager login = new AccountManager(new DatabaseLogin(con));
-            UserModel user = login.GetUser("Jessen");
-            auctionProducts = manager.Get<AuctionProductManager>().GetAll();
-            for (int i = 0; i < auctionProducts.Count(); i++)
+            CreateLoginUser(manager, "Jessen3", "test4");
+            //UserModel d = login.GetUser("pjj");
+            for (int i = 0; i < manager.Get<AuctionProductManager>().Products.Count(); i++)
             {
-                auctionProducts[i].Product.HighestBidder.OnPriceChanged += HighestBidder_OnPriceChanged;
+                manager.Get<AuctionProductManager>().Products[i].Product.HighestBidder.OnPriceChanged += HighestBidder_OnPriceChanged;
             }
             while (true)
             {
@@ -30,15 +30,15 @@ namespace AuctionHouseBackend
                 if (input == 1)
                 {
                     ProductModel<AuctionProductModel> model = new ProductModel<AuctionProductModel>(new Models.AuctionProductModel("test jessen2", "test jessen2",
-                        Category.KID, Status.AVAILABLE, DateTime.Today), user);
-                    if (product.Create(model))
+                        Category.KID, Status.AVAILABLE, DateTime.Now.AddMinutes(2000)), user);
+                    if (manager.Get<AuctionProductManager>().Create(model))
                     {
                         Console.WriteLine("Product created");
                     }
                 }
                 else if (input == 2)
                 {
-                    List<ProductModel<AuctionProductModel>> products = product.GetUserProducts(user.Id);
+                    List<ProductModel<AuctionProductModel>> products = manager.Get<AuctionProductManager>().GetUserProducts(user.Id);
                     for (int i = 0; i < products.Count(); i++)
                     {
                         Console.WriteLine(products[i].Product.ToString());
@@ -46,7 +46,7 @@ namespace AuctionHouseBackend
                 }
                 else if (input == 3)
                 {
-                    List<ProductModel<AuctionProductModel>> products = product.GetAll();
+                    List<ProductModel<AuctionProductModel>> products = manager.Get<AuctionProductManager>().GetAll();
                     for (int i = 0; i < products.Count(); i++)
                     {
                         Console.WriteLine(products[i].Product.ToString());
@@ -55,7 +55,15 @@ namespace AuctionHouseBackend
                 }
                 else if (input == 4)
                 {
-                    manager.Get<AuctionProductManager>().BidOnProduct(user.Id, GetProductFromId(1), 700);
+                    ProductModel<AuctionProductModel> product = GetProductFromId(1);
+                    AutobidModel autobid = new AutobidModel(user.Id, product.Product.Id, 20, 7000);
+                    manager.Get<AuctionProductManager>().BidOnProduct(user.Id, product, 300, autobid);
+                    manager.Get<AutobidManager>().Autobids.Add(autobid);
+                }
+                else if (input == 5)
+                {
+                    ProductModel<AuctionProductModel> product = GetProductFromId(1);
+                    manager.Get<AuctionProductManager>().BidOnProduct(user.Id, product, Convert.ToDecimal(Console.ReadLine()));
                 }
             }
             
@@ -63,24 +71,23 @@ namespace AuctionHouseBackend
 
         static private ProductModel<AuctionProductModel> GetProductFromId(int id)
         {
-            for (int i = 0; i < auctionProducts.Count; i++)
+            for (int i = 0; i < manager.Get<AuctionProductManager>().Products.Count; i++)
             {
-                if (auctionProducts[i].Product.Id == id)
-                    return auctionProducts[i];
+                if (manager.Get<AuctionProductManager>().Products[i].Product.Id == id)
+                    return manager.Get<AuctionProductManager>().Products[i];
             }
             return null;
         }
 
         private static void HighestBidder_OnPriceChanged(object? sender, object e)
         {
-            Console.WriteLine("price changed item id: " + ((ProductModel<AuctionProductModel>)e).Product.Id);
+            Console.WriteLine("price changed to " + ((ProductModel<AuctionProductModel>)e).Product.HighestBidder.Price);
         }
 
-        static void CreateLoginUser(string username, string mail)
+        static void CreateLoginUser(Manager manager, string username, string mail)
         {
-            AccountManager login = new AccountManager(new DatabaseLogin(con));
             Console.Read();
-            if (!login.CreateAccount(new Models.UserModel("Patrick", "Jessen", username, mail, "test1234")))
+            if (!manager.Get<AccountManager>().CreateAccount(new Models.UserModel("Patrick", "Jessen", username, mail, "1")))
             {
                 Console.WriteLine("Username already exists");
                 Console.Read();

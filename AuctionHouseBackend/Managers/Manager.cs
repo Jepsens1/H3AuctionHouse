@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace AuctionHouseBackend.Managers
 {
+    /// <summary>
+    /// Manager class that collects all the managers for easy access
+    /// This class can handle other objects than managers but its main purpose is the managers only
+    /// </summary>
     public class Manager
     {
         List<object> managers;
@@ -15,24 +19,31 @@ namespace AuctionHouseBackend.Managers
         public Manager(string constring)
         {
             managers= new List<object>();
-            Add<AuctionProductManager>(new AuctionProductManager(new DatabaseAuctionProduct(constring)));
+            DatabaseAuctionProduct databaseAuctionProduct = new DatabaseAuctionProduct(constring);
+            Add<AuctionProductManager>(new AuctionProductManager(databaseAuctionProduct));
             Add<AccountManager>(new AccountManager(new DatabaseLogin(constring)));
             Add<SMTPEmailManager>(new SMTPEmailManager());
+            Add<AutobidManager>(new AutobidManager(databaseAuctionProduct, Get<AuctionProductManager>()));
         }
 
+        /// <summary>
+        /// Get a manager object of type specified
+        /// </summary>
+        /// <typeparam name="T">Type of manager object</typeparam>
+        /// <returns>the manager object</returns>
         public T? Get<T>()
         {
             for (int i = 0; i < managers.Count; i++)
             {
                 if (managers[i].GetType() == typeof(T))
                 {
-                    return ((T)managers[i]);
+                    return (T)managers[i];
                 }
             }
             return default(T);
         }
 
-        public void Add<T>(T manager)
+        private void Add<T>(T manager)
         {
             managers.Add(manager);
         }
