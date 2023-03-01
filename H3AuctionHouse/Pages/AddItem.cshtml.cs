@@ -50,9 +50,18 @@ namespace H3AuctionHouse.Pages
         {
             try
             {
+                //Checks to see if user has filled all input fields
+                if(!ModelState.IsValid)
+                {
+                    return Page();
+                }
                 bool Iscreated = false;
                 //Gets user by session
                 UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
+                if(user== null)
+                {
+                    throw new Exception("Session user is null");
+                }
                 //Convets the SelectedCategory string to Enum
                 Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
                 //Checks to see if ProductName and Description is not empty or null

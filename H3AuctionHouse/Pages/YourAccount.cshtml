@@ -1,0 +1,13 @@
+﻿@page
+@model H3AuctionHouse.Pages.YourAccountModel
+@{
+    if(Model.MyUser != null)
+    {
+        <p>Firstname: @Model.MyUser.FirstName</p>
+        <p>Lastname: @Model.MyUser.LastName</p>
+        <p>Username: @Model.MyUser.Username</p>
+        <p>Email: @Model.MyUser.Email</p>
+    }
+
+    <p>@Model.ErrorMsg</p>
+}

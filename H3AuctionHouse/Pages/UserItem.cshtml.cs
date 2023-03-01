@@ -30,6 +30,10 @@ namespace H3AuctionHouse.Pages
             {
                 //Gets user from session
                 UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
+                if(user == null)
+                {
+                    throw new Exception("Session user is null");
+                }
                 //Gets the Users Items with user id
                 UserItems = Program.manager.Get<AuctionProductManager>().GetUserProducts(user.Id);
                 //If user selects category
@@ -45,7 +49,6 @@ namespace H3AuctionHouse.Pages
             {
                 Errormsg = "Something went wrong";
                 Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "UserItem.OnGet()" + e.Message + e.StackTrace);
-                throw;
             }
            
         }
