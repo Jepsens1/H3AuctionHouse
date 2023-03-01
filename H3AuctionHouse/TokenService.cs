@@ -28,7 +28,7 @@ namespace H3AuctionHouse
                 issuer: "test",
                 audience: "test",
                 claims: userclaims,
-                expires: DateTime.Now.AddMinutes(2),
+                expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: credentials
                 );
 
