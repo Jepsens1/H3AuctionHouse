@@ -2,6 +2,7 @@ using AuctionHouseBackend;
 using AuctionHouseBackend.Interfaces;
 using AuctionHouseBackend.Managers;
 using AuctionHouseBackend.Models;
+using H3AuctionHouse.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace H3AuctionHouse.Pages
 {
-    [Authorize]
+    [JwtTokenValidate]
     public class UserItemModel : PageModel
     {
         //Used to display all items that user has

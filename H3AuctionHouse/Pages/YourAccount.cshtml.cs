@@ -1,11 +1,12 @@
 using AuctionHouseBackend.Models;
+using H3AuctionHouse.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace H3AuctionHouse.Pages
 {
-    [Authorize]
+    [JwtTokenValidate]
     public class YourAccountModel : PageModel
     {
         public UserModel MyUser { get; set; }

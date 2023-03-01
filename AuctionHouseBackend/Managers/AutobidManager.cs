@@ -49,6 +49,7 @@ namespace AuctionHouseBackend.Managers
                             {
                                 productManager.BidOnProduct(Autobids[j].UserId, products[i], price);
                                 Thread.Sleep(2000);
+                                break;
                             }
                         }
                     }
