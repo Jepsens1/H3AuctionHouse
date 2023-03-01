@@ -31,7 +31,7 @@ namespace AuctionHouseBackend.Database
         {
             try
             {
-                SqlConnect.Open();
+                SqlConnect.OpenAsync();
             }
             catch { }
         }
@@ -39,8 +39,8 @@ namespace AuctionHouseBackend.Database
         protected async void CloseConnection()
         {
             try
-            { 
-                SqlConnect.Close(); 
+            {
+                SqlConnect.CloseAsync();
             } catch { }
         }
 
