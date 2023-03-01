@@ -31,7 +31,7 @@ namespace AuctionHouseBackend.Database
         {
             try
             {
-                SqlConnect.OpenAsync();
+                SqlConnect.Open();
             }
             catch { }
         }
@@ -40,7 +40,7 @@ namespace AuctionHouseBackend.Database
         {
             try
             {
-                SqlConnect.CloseAsync();
+                SqlConnect.Close();
             } catch { }
         }
 
@@ -67,7 +67,7 @@ namespace AuctionHouseBackend.Database
             string query = $"SELECT * FROM Users WHERE username = @username";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@username", username);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             UserModel user;
             if (SqlDataReader.Read())
             {
@@ -87,7 +87,7 @@ namespace AuctionHouseBackend.Database
             string query = $"SELECT * FROM Users WHERE id = @id";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
-            SqlDataReader = SqlDataCommand.ExecuteReader();
+            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             UserModel user;
             if (SqlDataReader.Read())
             {
