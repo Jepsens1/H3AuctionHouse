@@ -21,19 +21,19 @@ namespace AuctionHouseBackend.Managers
         public AuctionProductManager(DatabaseAuctionProduct databaseAuctionProduct) 
         { 
             this.databaseAuctionProduct = databaseAuctionProduct;
-            Products = databaseAuctionProduct.GetAll();
+            Products = databaseAuctionProduct.GetAll().Result;
             Thread t = new Thread(CheckForFinnishedAuctions);
             t.Start();
         }
 
         public List<ProductModel<AuctionProductModel>> GetAll()
         {
-            return databaseAuctionProduct.GetAll();
+            return databaseAuctionProduct.GetAll().Result;
         }
 
         public bool Create(ProductModel<AuctionProductModel> product)
         {
-            bool create = databaseAuctionProduct.Create(product);
+            bool create = databaseAuctionProduct.Create(product).Result;
             if (create)
             {
                 Products.Add(product);
@@ -44,12 +44,12 @@ namespace AuctionHouseBackend.Managers
 
         public List<ProductModel<AuctionProductModel>> GetUserProducts(int userId)
         {
-            return databaseAuctionProduct.GetUserProducts(userId);
+            return databaseAuctionProduct.GetUserProducts(userId).Result;
         }
 
         public ProductModel<AuctionProductModel> GetProduct(int productId)
         {
-            return databaseAuctionProduct.GetProduct(productId);
+            return databaseAuctionProduct.GetProduct(productId).Result;
         }
 
         public List<ProductModel<AuctionProductModel>> GetProduct(Category category)
@@ -88,10 +88,10 @@ namespace AuctionHouseBackend.Managers
                 databaseAuctionProduct.SetHighestBidder(userId, product.Product.Id, amount);
                 if (autobid != null)
                 {
-                    databaseAuctionProduct.AddAutobid(userId, product.Product.Id, amount, autobid.AutobidPrice, autobid.AutobidMax);
+                    databaseAuctionProduct.AddAutobid(userId, product.Product.Id, autobid.AutobidPrice, autobid.AutobidMax);
                 }
                 product.Product.HighestBidder.Price = amount;
-                product.Product.HighestBidder.User.Id = userId;
+                product.Product.HighestBidder.User = databaseAuctionProduct.GetUser(userId).Result;
                 product.Product.HighestBidder.TriggerOnPriceChanged(product);
             }
             catch (Exception ex)

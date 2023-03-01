@@ -20,20 +20,20 @@ namespace AuctionHouseBackend.Database
         }
 
         // 
-        public UserModel? Login(string username)
+        public async Task<UserModel>? Login(string username)
         {
-            UserModel user = GetUser(username);
+            UserModel user = await GetUser(username);
             if (user != null)
             {
-                user.Hash = GetHash(user.Id);
+                user.Hash = await GetHash(user.Id);
                 return user;
             }
             return null;
         }
 
-        public bool CreateAccount(UserModel user)
+        public async Task<bool> CreateAccount(UserModel user)
         {
-            UserModel userModel = GetUser(user.Username);
+            UserModel userModel = await GetUser(user.Username);
             OpenConnection();
             if (userModel == null)
             {
@@ -53,7 +53,7 @@ namespace AuctionHouseBackend.Database
             return false;
         }
 
-        public void UpdateLogin(int id, HashModel hash)
+        public async void UpdateLogin(int id, HashModel hash)
         {
             OpenConnection();
             string query = $"UPDATE Hashes SET hash = @hash, salt = @salt WHERE id = @id";
@@ -65,7 +65,7 @@ namespace AuctionHouseBackend.Database
             CloseConnection();
         }
 
-        private HashModel? GetHash(int id)
+        private async Task<HashModel>? GetHash(int id)
         {
             OpenConnection();
             string query = $"SELECT * FROM Hashes WHERE id = @id";
@@ -82,7 +82,7 @@ namespace AuctionHouseBackend.Database
             return null;
         }
 
-        private void CreateSalt(UserModel user)
+        private async void CreateSalt(UserModel user)
         {
             int id = GetUser(user.Username).Id;
             OpenConnection();

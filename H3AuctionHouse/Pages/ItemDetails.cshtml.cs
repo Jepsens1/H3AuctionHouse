@@ -55,12 +55,19 @@ namespace H3AuctionHouse.Pages
             {
                 autobid = new AutobidModel(user.Id, Item.Product.Id, AutoBidValue, MaxAutobidValue);
             }
-            ResponseCode response = Program.manager.Get<AuctionProductManager>().BidOnProduct(user.Id, Item, BidValue, autobid);
-            if(response == ResponseCode.NoError)
+            if (Program.manager.Get<AutobidManager>().HasUserAutobid(Item, user))
             {
-                Program.manager.Get<AutobidManager>().Autobids.Add(autobid);
+                Program.manager.Get<AutobidManager>().UpdateAutobid(autobid);
             }
-            DisplayResponse(response);
+            else
+            {
+                ResponseCode response = Program.manager.Get<AuctionProductManager>().BidOnProduct(user.Id, Item, BidValue, autobid);
+                if(response == ResponseCode.NoError)
+                {
+                    Program.manager.Get<AutobidManager>().Autobids.Add(autobid);
+                }
+                DisplayResponse(response);
+            }
             Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
         }
         /// <summary>

@@ -1,1 +1,1 @@
-01-03-2023 10:56:27 ERROR AddAll() ExecuteReader requires an open and available Connection. The connection's current state is closed.
+01-03-2023 12:09:51 ERROR ItemDetails.OnGet()Could not fetch item   at H3AuctionHouse.Pages.ItemDetailsModel.OnGet(Int32 id) in C:\Users\pjj\source\repos\H3AuctionHouse\H3AuctionHouse\Pages\ItemDetails.cshtml.cs:line 38

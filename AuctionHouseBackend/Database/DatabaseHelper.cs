@@ -27,7 +27,7 @@ namespace AuctionHouseBackend.Database
             SqlConnect = new SqlConnection(ConnectionString);
         }
 
-        protected void OpenConnection()
+        protected async void OpenConnection()
         {
             try
             {
@@ -36,7 +36,7 @@ namespace AuctionHouseBackend.Database
             catch { }
         }
 
-        protected void CloseConnection()
+        protected async void CloseConnection()
         {
             try
             { 
@@ -61,7 +61,7 @@ namespace AuctionHouseBackend.Database
         //    return id;
         //}
 
-        public UserModel GetUser(string username)
+        public async Task<UserModel> GetUser(string username)
         {
             OpenConnection();
             string query = $"SELECT * FROM Users WHERE username = @username";
@@ -81,7 +81,7 @@ namespace AuctionHouseBackend.Database
             return null;
         }
 
-        public UserModel? GetUser(int id)
+        public async Task<UserModel>? GetUser(int id)
         {
             OpenConnection();
             string query = $"SELECT * FROM Users WHERE id = @id";

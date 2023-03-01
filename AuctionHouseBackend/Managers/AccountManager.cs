@@ -15,12 +15,12 @@ namespace AuctionHouseBackend.Managers
 
         public UserModel GetUser(string username)
         {
-            return databaseHandler.GetUser(username);
+            return databaseHandler.GetUser(username).Result;
         }
 
         public UserModel Login(string username, string password)
         {
-            UserModel user = ((DatabaseLogin)databaseHandler).Login(username);
+            UserModel user = ((DatabaseLogin)databaseHandler).Login(username).Result;
             if (user == null)
             {
                 return null;
@@ -38,7 +38,7 @@ namespace AuctionHouseBackend.Managers
         {
             HashModel hashSalt = CryptoService.SaltPassword(user.Password);
             user.Hash = hashSalt;
-            if (((DatabaseLogin)databaseHandler).CreateAccount(user))
+            if (((DatabaseLogin)databaseHandler).CreateAccount(user).Result)
             {
                 return true;
             }

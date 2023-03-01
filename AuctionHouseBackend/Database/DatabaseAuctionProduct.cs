@@ -47,7 +47,7 @@ namespace AuctionHouseBackend.Database
             return productModel;
         }
 
-        public List<ProductModel<AuctionProductModel>> GetAll()
+        public async Task<List<ProductModel<AuctionProductModel>>> GetAll()
         {
             List<ProductModel<AuctionProductModel>> products = new List<ProductModel<AuctionProductModel>>();
             try
@@ -64,7 +64,7 @@ namespace AuctionHouseBackend.Database
                 CloseConnection();
                 for (int i = 0; i < products.Count; i++)
                 {
-                    products[i].Owner = GetUserFromProductId(products[i].Product.Id);
+                    products[i].Owner = await GetUserFromProductId(products[i].Product.Id);
                 }
             }
             catch (Exception ex)
@@ -76,11 +76,11 @@ namespace AuctionHouseBackend.Database
             return products;
         }
 
-        public ProductModel<AuctionProductModel>? GetProduct(int productId)
+        public async Task<ProductModel<AuctionProductModel>>? GetProduct(int productId)
         {
             try
             {
-                UserModel owner = GetUserFromProductId(productId);
+                UserModel owner = await GetUserFromProductId(productId);
                 OpenConnection();
                 string query = $"SELECT * FROM AuctionProducts WHERE productId = @id";
                 SqlDataCommand = new SqlCommand(query, SqlConnect);
@@ -94,9 +94,9 @@ namespace AuctionHouseBackend.Database
                 CloseConnection();
                 if (product != null)
                 {
-                    UserModel user = GetUser(product.Product.Id);
+                    UserModel user = await GetUser(product.Product.Id);
                     product.Product.HighestBidder.User = user;
-                    product.Owner = GetUserFromProductId(productId);
+                    product.Owner = await GetUserFromProductId(productId);
                     return product;
                 }
                 return null;
@@ -109,7 +109,7 @@ namespace AuctionHouseBackend.Database
             }
         }
 
-        public bool Create(ProductModel<AuctionProductModel> product)
+        public async Task<bool> Create(ProductModel<AuctionProductModel> product)
         {
             try
             {
@@ -145,9 +145,9 @@ namespace AuctionHouseBackend.Database
             return true;
         }
 
-        public List<ProductModel<AuctionProductModel>> GetUserProducts(int userId)
+        public async Task<List<ProductModel<AuctionProductModel>>> GetUserProducts(int userId)
         {
-            int productId = GetProductIdFromUserId(userId);
+            int productId = await GetProductIdFromUserId(userId);
             try
             {
                 OpenConnection();
@@ -164,7 +164,7 @@ namespace AuctionHouseBackend.Database
 
                 for (int i = 0; i < products.Count; i++)
                 {
-                    UserModel user = GetUserFromProductId(products[i].Product.HighestBidder.User.Id);
+                    UserModel user = await GetUserFromProductId(products[i].Product.HighestBidder.User.Id);
                     products[i].Product.HighestBidder.User = user;
                 }
                 return products;
@@ -177,7 +177,7 @@ namespace AuctionHouseBackend.Database
             }
         }
 
-        public void SetHighestBidder(int userId, int productId, decimal price)
+        public async void SetHighestBidder(int userId, int productId, decimal price)
         {
             OpenConnection();
             string query = $"UPDATE AuctionProducts SET highestBidderId = @userId, price = @price WHERE productId = @productId";
@@ -189,7 +189,7 @@ namespace AuctionHouseBackend.Database
             CloseConnection();
         }
 
-        public void UpdateExpireryDate(int productId, DateTime expireTime)
+        public async void UpdateExpireryDate(int productId, DateTime expireTime)
         {
             OpenConnection();
             string query = $"UPDATE AuctionProducts SET expireryDate = @expireryDate WHERE productId = @productId";
@@ -201,21 +201,20 @@ namespace AuctionHouseBackend.Database
             CloseConnection();
         }
 
-        public void AddAutobid(int userId, int productId, decimal price, decimal autobidPrice, decimal maximumPrice)
+        public async void AddAutobid(int userId, int productId, decimal autobidPrice, decimal maximumPrice)
         {
             OpenConnection();
-            string query = $"INSERT INTO Bids(productId, userId, price, autobidPrice, maximumPrice) VALUES(@productId, @userId, @price, @autobidPrice, @maximumPrice)";
+            string query = $"INSERT INTO Bids(productId, userId, autobidPrice, maximumPrice) VALUES(@productId, @userId, @autobidPrice, @maximumPrice)";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
             SqlDataCommand.Parameters.AddWithValue("@userId", userId);
-            SqlDataCommand.Parameters.AddWithValue("@price", price);
             SqlDataCommand.Parameters.AddWithValue("@autobidPrice", autobidPrice);
             SqlDataCommand.Parameters.AddWithValue("@maximumPrice", maximumPrice);
             SqlDataReader = SqlDataCommand.ExecuteReader();
             CloseConnection();
         }
 
-        public List<AutobidModel> GetAutobids()
+        public async Task<List<AutobidModel>> GetAutobids()
         {
             OpenConnection();
             string query = $"SELECT * FROM Bids";
@@ -230,7 +229,22 @@ namespace AuctionHouseBackend.Database
             return models;
         }
 
-        public void ChangeStatus(int productId, Status status)
+        public async void UpdateAutoBid(int userId, int productId, decimal autobidPrice, decimal maximumPrice)
+        {
+            OpenConnection();
+            string query = $"UPDATE Bids SET maximumPrice = @maximumPrice AND autobidPrice = @autobidPrice WHERE productId = @productId AND userId = @userId";
+            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlDataCommand.Parameters.AddWithValue("@productId", productId);
+            SqlDataCommand.Parameters.AddWithValue("@userId", userId);
+            SqlDataCommand.Parameters.AddWithValue("@autobidPrice", autobidPrice);
+            SqlDataCommand.Parameters.AddWithValue("@maximumPrice", maximumPrice);
+            SqlDataReader = SqlDataCommand.ExecuteReader();
+            CloseConnection();
+        }
+
+
+
+        public async void ChangeStatus(int productId, Status status)
         {
             OpenConnection();
             string query = $"UPDATE AuctionProducts SET productStatus = @status WHERE productId = @id";
@@ -241,7 +255,7 @@ namespace AuctionHouseBackend.Database
             CloseConnection();
         }
 
-        private UserModel GetUserFromProductId(int id)
+        private async Task<UserModel> GetUserFromProductId(int id)
         {
             OpenConnection();
             int userId = 0;
@@ -254,10 +268,10 @@ namespace AuctionHouseBackend.Database
                 userId = Convert.ToInt32(SqlDataReader["userId"]);
             }
             CloseConnection();
-            return GetUser(userId);
+            return await GetUser(userId);
         }
 
-        private int GetProductIdFromUserId(int userId)
+        private async Task<int> GetProductIdFromUserId(int userId)
         {
             OpenConnection();
             int id = 0;
