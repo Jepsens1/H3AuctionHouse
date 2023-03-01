@@ -11,6 +11,7 @@ using H3AuctionHouse.Authorization;
 
 namespace H3AuctionHouse.Pages
 {
+    //Uses JWTToken validation to see if token is expired or invalid
     [JwtTokenValidate]
     public class AddItemModel : PageModel
     {

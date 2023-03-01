@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace H3AuctionHouse.Pages
 {
+    //Uses JWTToken validation to see if token is expired or invalid
     [JwtTokenValidate]
     public class YourAccountModel : PageModel
     {
