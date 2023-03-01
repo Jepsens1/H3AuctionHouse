@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using AuctionHouseBackend.Interfaces;
 using AuctionHouseBackend;
 using AuctionHouseBackend.Managers;
+using H3AuctionHouse.Authorization;
 
 namespace H3AuctionHouse.Pages
 {
-    [Authorize]
+    [JwtTokenValidate]
     public class AddItemModel : PageModel
     {
         

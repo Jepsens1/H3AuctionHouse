@@ -2,6 +2,7 @@ using AuctionHouseBackend;
 using AuctionHouseBackend.Interfaces;
 using AuctionHouseBackend.Managers;
 using AuctionHouseBackend.Models;
+using H3AuctionHouse.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,6 +21,11 @@ namespace H3AuctionHouse.Pages
 
         //Used to display message on bid status
         public string Msg { get; set; }
+
+        [BindProperty]
+        public decimal AutoBidValue { get; set; }
+        [BindProperty]
+        public decimal MaxAutobidValue { get; set; }
         public void OnGet(int id)
         {
             try
@@ -42,9 +48,18 @@ namespace H3AuctionHouse.Pages
             //The way we update Item is kinda stupid, idealy we want to bind the Item property, but it will be null for some reason
             //So the way we update Item needs to be refined
             //This is just to make it work
-            Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
+            AutobidModel autobid = null;
             UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
-            ResponseCode response = Program.manager.Get<AuctionProductManager>().BidOnProduct(user.Id, Item, BidValue);
+            Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
+            if (AutoBidValue > 0 && MaxAutobidValue > AutoBidValue)
+            {
+                autobid = new AutobidModel(user.Id, Item.Product.Id, AutoBidValue, MaxAutobidValue);
+            }
+            ResponseCode response = Program.manager.Get<AuctionProductManager>().BidOnProduct(user.Id, Item, BidValue, autobid);
+            if(response == ResponseCode.NoError)
+            {
+                Program.manager.Get<AutobidManager>().Autobids.Add(autobid);
+            }
             DisplayResponse(response);
             Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
         }
