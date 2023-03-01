@@ -25,6 +25,30 @@ namespace AuctionHouseBackend.Managers
             t.Start();
         }
 
+        /// <summary>
+        /// Checks if a user has already made an autobid
+        /// Used so we can update the Autobid instead of making a new
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public bool HasUserAutobid(ProductModel<AuctionProductModel> product, UserModel user)
+        {
+            for (int i = 0; i < Autobids.Count; i++)
+            {
+                if (Autobids[i].UserId == user.Id && Autobids[i].ProductId == product.Product.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void UpdateAutobid(AutobidModel autobid)
+        {
+            databaseAuctionProduct.UpdateAutoBid(autobid.UserId, autobid.ProductId, autobid.AutobidPrice, autobid.AutobidMax);
+        }
+
         public void Autobid(AuctionProductManager productManager)
         {
             while (true)
@@ -39,7 +63,6 @@ namespace AuctionHouseBackend.Managers
                             if (price > 0 && price > products[i].Product.HighestBidder.Price)
                             {
                                 productManager.BidOnProduct(Autobids[j].UserId, products[i], price);
-                                //break;
                             }
                         }
                     }
