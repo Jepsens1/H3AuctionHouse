@@ -53,7 +53,8 @@ namespace AuctionHouseBackend.Database
             try
             {
 
-                OpenConnection();
+                SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+                SqlConnect.Open();
                 string query = $"SELECT * FROM AuctionProducts";
                 SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
                 SqlDataReader SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
@@ -61,7 +62,7 @@ namespace AuctionHouseBackend.Database
                 {
                     products.Add(GetProductHelper(SqlDataReader));
                 }
-                CloseConnection();
+                SqlConnect.Close();
                 for (int i = 0; i < products.Count; i++)
                 {
                     products[i].Owner = await GetUserFromProductId(products[i].Product.Id);
@@ -69,7 +70,7 @@ namespace AuctionHouseBackend.Database
             }
             catch (Exception ex)
             {
-                CloseConnection();
+                //CloseConnection();
                 Logger.AddLog(LogLevel.ERROR, "AddAll() " + ex.Message);
                 return new List<ProductModel<AuctionProductModel>>();
             }
@@ -81,7 +82,8 @@ namespace AuctionHouseBackend.Database
             try
             {
                 UserModel owner = await GetUserFromProductId(productId);
-                OpenConnection();
+                SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+                SqlConnect.Open();
                 string query = $"SELECT * FROM AuctionProducts WHERE productId = @id";
                 SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
                 SqlDataCommand.Parameters.AddWithValue("@id", productId);
@@ -91,7 +93,7 @@ namespace AuctionHouseBackend.Database
                 {
                     product = GetProductHelper(SqlDataReader);
                 }
-                CloseConnection();
+                SqlConnect.Close();
                 if (product != null)
                 {
                     UserModel user = await GetUser(product.Product.Id);
@@ -103,7 +105,7 @@ namespace AuctionHouseBackend.Database
             }
             catch (Exception ex)
             {
-                CloseConnection();
+                //CloseConnection();
                 Logger.AddLog(LogLevel.ERROR, "GetProduct() " + ex.Message);
                 return null;
             }
@@ -113,7 +115,8 @@ namespace AuctionHouseBackend.Database
         {
             try
             {
-                OpenConnection();
+                SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+                SqlConnect.Open();
                 DateTime date = product.Product.ExpireryDate;
                 string sqlFormattedDate = date.ToString("yyyy-MM-dd HH:mm:ss.fff");
                 string query = $"INSERT INTO Product(userId) VALUES (@ownerId)";
@@ -133,12 +136,12 @@ namespace AuctionHouseBackend.Database
                 SqlDataCommand.Parameters.AddWithValue("@productCategory", (int)product.Product.Category);
                 SqlDataCommand.Parameters.AddWithValue("@productExpireDate", sqlFormattedDate);
                 await SqlDataCommand.ExecuteNonQueryAsync();
-                CloseConnection();
+                SqlConnect.Close();
 
             }
             catch (Exception ex)
             {
-                CloseConnection();
+                //CloseConnection();
                 Logger.AddLog(LogLevel.ERROR, "Create() " + ex.Message);
                 return false;
             }
@@ -150,7 +153,8 @@ namespace AuctionHouseBackend.Database
             int productId = await GetProductIdFromUserId(userId);
             try
             {
-                OpenConnection();
+                SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+                SqlConnect.Open();
                 string query = $"SELECT * FROM AuctionProducts WHERE productId = @id";
                 SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
                 SqlDataCommand.Parameters.AddWithValue("@id", productId);
@@ -160,7 +164,7 @@ namespace AuctionHouseBackend.Database
                 {
                     products.Add(GetProductHelper(SqlDataReader));
                 }
-                CloseConnection();
+                SqlConnect.Close();
 
                 for (int i = 0; i < products.Count; i++)
                 {
@@ -171,7 +175,7 @@ namespace AuctionHouseBackend.Database
             }
             catch (Exception ex)
             {
-                CloseConnection();
+                //SqlConnect.Close();
                 Logger.AddLog(LogLevel.ERROR, "GetUserProducts() " + ex.Message);
                 return new List<ProductModel<AuctionProductModel>>();
             }
@@ -179,31 +183,34 @@ namespace AuctionHouseBackend.Database
 
         public async void SetHighestBidder(int userId, int productId, decimal price)
         {
-            OpenConnection();
+            SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+            SqlConnect.Open();
             string query = $"UPDATE AuctionProducts SET highestBidderId = @userId, price = @price WHERE productId = @productId";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@userId", userId);
             SqlDataCommand.Parameters.AddWithValue("@price", price);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
             await SqlDataCommand.ExecuteReaderAsync();
-            CloseConnection();
+            SqlConnect.Close();
         }
 
         public async void UpdateExpireryDate(int productId, DateTime expireTime)
         {
-            OpenConnection();
+            SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+            SqlConnect.Open();
             string query = $"UPDATE AuctionProducts SET expireryDate = @expireryDate WHERE productId = @productId";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             string sqlFormattedDate = expireTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
             SqlDataCommand.Parameters.AddWithValue("@expireryDate", sqlFormattedDate);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
-            SqlDataReader SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
-            CloseConnection();
+            await SqlDataCommand.ExecuteReaderAsync();
+            SqlConnect.Close();
         }
 
         public async void AddAutobid(int userId, int productId, decimal autobidPrice, decimal maximumPrice)
         {
-            OpenConnection();
+            SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+            SqlConnect.Open();
             string query = $"INSERT INTO Bids(productId, userId, autobidPrice, maximumPrice) VALUES(@productId, @userId, @autobidPrice, @maximumPrice)";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
@@ -211,12 +218,13 @@ namespace AuctionHouseBackend.Database
             SqlDataCommand.Parameters.AddWithValue("@autobidPrice", autobidPrice);
             SqlDataCommand.Parameters.AddWithValue("@maximumPrice", maximumPrice);
             await SqlDataCommand.ExecuteReaderAsync();
-            CloseConnection();
+            SqlConnect.Close();
         }
 
         public async Task<List<AutobidModel>> GetAutobids()
         {
-            OpenConnection();
+            SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+            SqlConnect.Open();
             string query = $"SELECT * FROM Bids";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataReader SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
@@ -225,39 +233,42 @@ namespace AuctionHouseBackend.Database
             {
                 models.Add(new AutobidModel(Convert.ToInt32(SqlDataReader["userId"]), Convert.ToInt32(SqlDataReader["productId"]), Convert.ToDecimal(SqlDataReader["autobidPrice"]), Convert.ToDecimal(SqlDataReader["maximumPrice"])));
             }
-            CloseConnection();
+            SqlConnect.Close();
             return models;
         }
 
         public async void UpdateAutoBid(int userId, int productId, decimal autobidPrice, decimal maximumPrice)
         {
-            OpenConnection();
-            string query = $"UPDATE Bids SET maximumPrice = @maximumPrice AND autobidPrice = @autobidPrice WHERE productId = @productId AND userId = @userId";
+            SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+            SqlConnect.Open();
+            string query = $"UPDATE Bids SET maximumPrice = @maximumPrice, autobidPrice = @autobidPrice WHERE productId = @productId AND userId = @userId";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
             SqlDataCommand.Parameters.AddWithValue("@userId", userId);
             SqlDataCommand.Parameters.AddWithValue("@autobidPrice", autobidPrice);
             SqlDataCommand.Parameters.AddWithValue("@maximumPrice", maximumPrice);
             await SqlDataCommand.ExecuteReaderAsync();
-            CloseConnection();
+            SqlConnect.Close();
         }
 
 
 
         public async void ChangeStatus(int productId, Status status)
         {
-            OpenConnection();
+            SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+            SqlConnect.Open();
             string query = $"UPDATE AuctionProducts SET productStatus = @status WHERE productId = @id";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@status", status);
             SqlDataCommand.Parameters.AddWithValue("@id", productId);
             await SqlDataCommand.ExecuteReaderAsync();
-            CloseConnection();
+            SqlConnect.Close();
         }
 
         private async Task<UserModel> GetUserFromProductId(int id)
         {
-            OpenConnection();
+            SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+            SqlConnect.Open();
             int userId = 0;
             string query = $"SELECT userId FROM Product WHERE id = @id";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
@@ -267,13 +278,14 @@ namespace AuctionHouseBackend.Database
             {
                 userId = Convert.ToInt32(SqlDataReader["userId"]);
             }
-            CloseConnection();
+            SqlConnect.Close();
             return await GetUser(userId);
         }
 
         private async Task<int> GetProductIdFromUserId(int userId)
         {
-            OpenConnection();
+            SqlConnection SqlConnect = new SqlConnection(ConnectionString);
+            SqlConnect.Open();
             int id = 0;
             string query = $"SELECT id FROM Product WHERE userId = @id";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
@@ -283,7 +295,7 @@ namespace AuctionHouseBackend.Database
             {
                 id = Convert.ToInt32(SqlDataReader["id"]);
             }
-            CloseConnection();
+            SqlConnect.Close();
             return id;
         }
     }
