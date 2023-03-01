@@ -107,6 +107,7 @@ namespace H3AuctionHouse
             app.UseSession();
             app.Use(async (context, next) =>
             {
+                //This method will check if user has a jwt token in cookies
                 var token = context.Request.Cookies["token"];
                 if (!string.IsNullOrEmpty(token))
                 {
