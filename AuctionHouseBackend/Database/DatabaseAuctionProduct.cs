@@ -13,6 +13,7 @@ namespace AuctionHouseBackend.Database
 {
     /// <summary>
     /// This class handles the auction product database calls
+    /// Every database call should have a try/catch but some i haven't added yet
     /// </summary>
     public class DatabaseAuctionProduct : DatabaseHelper
     {
@@ -188,10 +189,22 @@ namespace AuctionHouseBackend.Database
             CloseConnection();
         }
 
+        public void UpdateExpireryDate(int productId, DateTime expireTime)
+        {
+            OpenConnection();
+            string query = $"UPDATE AuctionProducts SET expireryDate = @expireryDate WHERE productId = @productId";
+            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            string sqlFormattedDate = expireTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            SqlDataCommand.Parameters.AddWithValue("@expireryDate", sqlFormattedDate);
+            SqlDataCommand.Parameters.AddWithValue("@productId", productId);
+            SqlDataReader = SqlDataCommand.ExecuteReader();
+            CloseConnection();
+        }
+
         public void AddAutobid(int userId, int productId, decimal price, decimal autobidPrice, decimal maximumPrice)
         {
             OpenConnection();
-            string query = $"INSERT INTO Bids(productId, userId, price, autobidPrice, maximumPrice) VALUES(@productId, @userId, @price, @autobidPrice, @maxumumPrice)";
+            string query = $"INSERT INTO Bids(productId, userId, price, autobidPrice, maximumPrice) VALUES(@productId, @userId, @price, @autobidPrice, @maximumPrice)";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
             SqlDataCommand.Parameters.AddWithValue("@userId", userId);
@@ -202,18 +215,16 @@ namespace AuctionHouseBackend.Database
             CloseConnection();
         }
 
-        public List<AutobidModel> GetAutobid(int userId, int productId)
+        public List<AutobidModel> GetAutobids()
         {
             OpenConnection();
-            string query = $"SELECT * FROM Bids WHERE userId = @userId AND productId = @productId";
+            string query = $"SELECT * FROM Bids";
             SqlDataCommand = new SqlCommand(query, SqlConnect);
-            SqlDataCommand.Parameters.AddWithValue("@productId", productId);
-            SqlDataCommand.Parameters.AddWithValue("@userId", userId);
             SqlDataReader = SqlDataCommand.ExecuteReader();
             List<AutobidModel> models = new List<AutobidModel>();
             while (SqlDataReader.Read())
             {
-                models.Add(new AutobidModel(Convert.ToDecimal(SqlDataReader["autobidPrice"]), Convert.ToDecimal(SqlDataReader["maximumPrice"])));
+                models.Add(new AutobidModel(Convert.ToInt32(SqlDataReader["userId"]), Convert.ToInt32(SqlDataReader["productId"]), Convert.ToDecimal(SqlDataReader["autobidPrice"]), Convert.ToDecimal(SqlDataReader["maximumPrice"])));
             }
             CloseConnection();
             return models;

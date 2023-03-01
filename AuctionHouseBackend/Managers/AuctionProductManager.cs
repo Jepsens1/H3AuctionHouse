@@ -75,7 +75,7 @@ namespace AuctionHouseBackend.Managers
         /// <param name="amount">The amount the user want to pay</param>
         /// <returns>Returns ErrorCodes.BidTooLow if bid is too low, returns ErrorCodes.YourOwnProduct if user tries to bid on his own product
         /// else returns ErrorCodes.NoError</returns>
-        public ResponseCode BidOnProduct(int userId, ProductModel<AuctionProductModel> product, decimal amount)
+        public ResponseCode BidOnProduct(int userId, ProductModel<AuctionProductModel> product, decimal amount, AutobidModel autobid = null)
         {
             try
             {
@@ -84,7 +84,14 @@ namespace AuctionHouseBackend.Managers
                 {
                     return response;
                 }
+                LastMinuteBid(product);
                 databaseAuctionProduct.SetHighestBidder(userId, product.Product.Id, amount);
+                if (autobid != null)
+                {
+                    databaseAuctionProduct.AddAutobid(userId, product.Product.Id, amount, autobid.AutobidPrice, autobid.AutobidMax);
+                }
+                product.Product.HighestBidder.Price = amount;
+                product.Product.HighestBidder.User.Id = userId;
                 product.Product.HighestBidder.TriggerOnPriceChanged(product);
             }
             catch (Exception ex)
@@ -93,6 +100,15 @@ namespace AuctionHouseBackend.Managers
                 return ResponseCode.UnknownError;
             }
             return ResponseCode.NoError;
+        }
+
+        private void LastMinuteBid(ProductModel<AuctionProductModel> product)
+        {
+            if (DateTime.Now.AddMinutes(-1) > product.Product.ExpireryDate)
+            {
+                product.Product.ExpireryDate = product.Product.ExpireryDate.AddMinutes(1);
+                databaseAuctionProduct.UpdateExpireryDate(product.Product.Id, product.Product.ExpireryDate);
+            }
         }
 
         private ResponseCode HandleBidResponseCodes(int userId, ProductModel<AuctionProductModel> product, decimal amount)
