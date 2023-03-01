@@ -30,6 +30,13 @@ namespace H3AuctionHouse
             
         }
 
+        /*patrick*///static string constring = "Server=PJJ-P15S-2022\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
+        /*phillip*/ static string constring = "Server=DESKTOP-51IFUJ0\\SQLEXPRESS;Database=AuctionHouse;Trusted_Connection=True;";
+        //public static AccountManager _loginManager = new AccountManager(new DatabaseLogin(constring));
+        //public static AuctionProductManager _auctionproductmanager = new AuctionProductManager(new DatabaseAuctionProduct(constring));
+        //public static IEmailManager emailManager = new SMTPEmailManager();
+        public static Manager manager = new Manager(constring);
+        
         public static void StartStatusChangedEvent()
         {
             for (int i = 0; i < manager.Get<AuctionProductManager>().Products.Count; i++)
@@ -66,11 +73,13 @@ namespace H3AuctionHouse
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddScoped<IInputSanitizer, InputSanitizer>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddSession(options =>
             {
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-
+                options.Cookie.SameSite = SameSiteMode.Lax;
                 options.Cookie.Name = "AuctionSession";
                
             });
@@ -90,7 +99,7 @@ namespace H3AuctionHouse
                     (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = false,
+                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true
                 };
             });
@@ -115,10 +124,23 @@ namespace H3AuctionHouse
             app.UseSession();
             app.Use(async (context, next) =>
             {
+                //This method will check if user has a jwt token in cookies
                 var token = context.Request.Cookies["token"];
                 if (!string.IsNullOrEmpty(token))
                 {
-                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    ITokenService service = new TokenService();
+                    //Validates token
+                    //This needs to be reworked
+                    if(!service.ValidateToken(token))
+                    {
+                        //Redirects to Logout Page if token has expired
+                        context.Response.Redirect("Logout");
+                    }
+                    else
+                    {
+                        //Adds token to header
+                        context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    }
                 }
                 await next();
             });

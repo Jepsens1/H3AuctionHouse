@@ -26,10 +26,15 @@ namespace H3AuctionHouse.Pages
             {
                 //Gets items with the id from our details page
                 Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
+                if(Item == null)
+                {
+                    Msg = "Could not get Item";
+                    throw new Exception("Could not fetch item");
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "ItemDetails.OnGet()" + e.Message + e.StackTrace);
             }
         }
         public void OnPost(int id)

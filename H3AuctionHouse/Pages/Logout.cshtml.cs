@@ -1,3 +1,4 @@
+using AuctionHouseBackend;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,12 +13,13 @@ namespace H3AuctionHouse.Pages
                 //Removes session and deletes cookie
                 HttpContext.Session.Remove("user");
                 Response.Cookies.Delete("token");
-                return RedirectToPage("Index");
+                Response.Headers.Remove("Authorization");
+                return RedirectToPage("Login");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "Logout.OnGet()" + e.Message + e.StackTrace);
+                return RedirectToPage("Index");
             }
         }
     }
