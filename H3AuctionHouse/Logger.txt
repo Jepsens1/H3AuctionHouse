@@ -1,1 +1,5 @@
-01-03-2023 13:04:10 ERROR BidOnProduct()One or more errors occurred. (BeginExecuteReader requires an open and available Connection. The connection's current state is closed.)
+01-03-2023 13:12:24 ERROR Index.OnGet()One or more errors occurred. (The process cannot access the file 'C:\Users\pjj\source\repos\H3AuctionHouse\H3AuctionHouse\Logger.txt' because it is being used by another process.)   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at System.Threading.Tasks.Task`1.get_Result()
+   at AuctionHouseBackend.Managers.AuctionProductManager.GetAll() in C:\Users\pjj\source\repos\H3AuctionHouse\AuctionHouseBackend\Managers\AuctionProductManager.cs:line 31
+   at H3AuctionHouse.Pages.IndexModel.OnGet() in C:\Users\pjj\source\repos\H3AuctionHouse\H3AuctionHouse\Pages\Index.cshtml.cs:line 39

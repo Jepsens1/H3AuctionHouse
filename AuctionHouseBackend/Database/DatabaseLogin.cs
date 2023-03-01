@@ -39,7 +39,7 @@ namespace AuctionHouseBackend.Database
             {
                 string query = $"INSERT INTO Users(username, firstName, lastName, email) VALUES(@username, @firstName, " +
                     $"@lastName, @email)";
-                SqlDataCommand = new SqlCommand(query, SqlConnect);
+                SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
                 SqlDataCommand.Parameters.AddWithValue("@username", user.Username);
                 SqlDataCommand.Parameters.AddWithValue("@firstName", user.FirstName);
                 SqlDataCommand.Parameters.AddWithValue("@lastName", user.LastName);
@@ -57,7 +57,7 @@ namespace AuctionHouseBackend.Database
         {
             OpenConnection();
             string query = $"UPDATE Hashes SET hash = @hash, salt = @salt WHERE id = @id";
-            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@hash", hash.Hash);
             SqlDataCommand.Parameters.AddWithValue("@salt", hash.Salt);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
@@ -69,9 +69,9 @@ namespace AuctionHouseBackend.Database
         {
             OpenConnection();
             string query = $"SELECT * FROM Hashes WHERE id = @id";
-            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
-            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
+            SqlDataReader SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             if (SqlDataReader.Read())
             {
                 HashModel hash = new HashModel(SqlDataReader["hash"].ToString(), SqlDataReader["Salt"].ToString());
@@ -87,7 +87,7 @@ namespace AuctionHouseBackend.Database
             int id = GetUser(user.Username).Id;
             OpenConnection();
             string query = $"INSERT INTO Hashes(id, hash, salt) VALUES(@id, @hash, @salt)";
-            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@hash", user.Hash.Hash);
             SqlDataCommand.Parameters.AddWithValue("@salt", user.Hash.Salt);
             SqlDataCommand.Parameters.AddWithValue("@id", id);

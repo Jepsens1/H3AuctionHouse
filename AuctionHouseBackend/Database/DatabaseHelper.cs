@@ -17,9 +17,9 @@ namespace AuctionHouseBackend.Database
     {
         public string ConnectionString { get; }
         public SqlConnection SqlConnect { get; protected set; }
-        public SqlCommand SqlDataCommand { get; protected set; }
-        public SqlDataReader SqlDataReader { get; protected set; }
-        public SqlDataAdapter SqlDataAdapter { get; protected set; }
+        //public SqlCommand SqlDataCommand { get; protected set; }
+        //public SqlDataReader SqlDataReader { get; protected set; }
+        //public SqlDataAdapter SqlDataAdapter { get; protected set; }
 
         public DatabaseHelper(string connectionString) 
         { 
@@ -65,9 +65,9 @@ namespace AuctionHouseBackend.Database
         {
             OpenConnection();
             string query = $"SELECT * FROM Users WHERE username = @username";
-            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@username", username);
-            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
+            SqlDataReader SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             UserModel user;
             if (SqlDataReader.Read())
             {
@@ -85,9 +85,9 @@ namespace AuctionHouseBackend.Database
         {
             OpenConnection();
             string query = $"SELECT * FROM Users WHERE id = @id";
-            SqlDataCommand = new SqlCommand(query, SqlConnect);
+            SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
-            SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
+            SqlDataReader SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             UserModel user;
             if (SqlDataReader.Read())
             {
