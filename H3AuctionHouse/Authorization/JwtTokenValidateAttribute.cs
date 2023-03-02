@@ -7,6 +7,7 @@ namespace H3AuctionHouse.Authorization
     /// <summary>
     /// This class is used for authorization pages
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class JwtTokenValidateAttribute : Attribute, IAuthorizationFilter
     {
         /// <summary>
@@ -26,13 +27,12 @@ namespace H3AuctionHouse.Authorization
                 return;
             }
             token = token.Replace("Bearer ", "");
-            ITokenService tokenManager = context.HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
+            ITokenService? tokenManager = context.HttpContext.RequestServices.GetService(typeof(ITokenService)) as ITokenService;
             //Checks to see if token is invalid or expired using ITokenService
             if (tokenManager != null && !tokenManager.ValidateToken(token))
             {
                 //Redirects to logout, if statement is true
                 context.Result = new RedirectResult("Logout");
-                return;
             }
         }
     }

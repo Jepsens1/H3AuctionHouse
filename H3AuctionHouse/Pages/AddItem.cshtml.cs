@@ -15,7 +15,7 @@ namespace H3AuctionHouse.Pages
     [JwtTokenValidate]
     public class AddItemModel : PageModel
     {
-        
+
         [Required]
         [BindProperty]
         public string ProductName { get; set; }
