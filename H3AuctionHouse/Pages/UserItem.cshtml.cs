@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace H3AuctionHouse.Pages
 {
+    //Uses JWTToken validation to see if token is expired or invalid
     [JwtTokenValidate]
     public class UserItemModel : PageModel
     {
