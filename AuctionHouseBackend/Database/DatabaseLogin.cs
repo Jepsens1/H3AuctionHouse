@@ -54,7 +54,7 @@ namespace AuctionHouseBackend.Database
             return false;
         }
 
-        public async void UpdateLogin(int id, HashModel hash)
+        public async Task UpdateLogin(int id, HashModel hash)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             SqlConnect.Open();
@@ -85,7 +85,7 @@ namespace AuctionHouseBackend.Database
             return null;
         }
 
-        private async void CreateSalt(UserModel user)
+        private async Task CreateSalt(UserModel user)
         {
             int id = GetUser(user.Username).Id;
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);

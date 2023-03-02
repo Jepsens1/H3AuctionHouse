@@ -27,23 +27,6 @@ namespace AuctionHouseBackend.Database
             
         }
 
-        //protected async void OpenConnection()
-        //{
-        //    try
-        //    {
-        //        SqlConnect.Open();
-        //    }
-        //    catch { }
-        //}
-
-        //protected async void CloseConnection()
-        //{
-        //    try
-        //    {
-        //        SqlConnect.Close();
-        //    } catch { }
-        //}
-
         //protected int GetPrimaryTableId(string tableName, string idName)
         //{
         //    OpenConnection();
