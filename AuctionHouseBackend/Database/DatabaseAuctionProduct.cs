@@ -181,7 +181,7 @@ namespace AuctionHouseBackend.Database
             }
         }
 
-        public async void SetHighestBidder(int userId, int productId, decimal price)
+        public async Task SetHighestBidder(int userId, int productId, decimal price)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             SqlConnect.Open();
@@ -194,7 +194,7 @@ namespace AuctionHouseBackend.Database
             SqlConnect.Close();
         }
 
-        public async void UpdateExpireryDate(int productId, DateTime expireTime)
+        public async Task UpdateExpireryDate(int productId, DateTime expireTime)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             SqlConnect.Open();
@@ -207,7 +207,7 @@ namespace AuctionHouseBackend.Database
             SqlConnect.Close();
         }
 
-        public async void AddAutobid(int userId, int productId, decimal autobidPrice, decimal maximumPrice)
+        public async Task AddAutobid(int userId, int productId, decimal autobidPrice, decimal maximumPrice)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             SqlConnect.Open();
@@ -237,7 +237,7 @@ namespace AuctionHouseBackend.Database
             return models;
         }
 
-        public async void UpdateAutoBid(int userId, int productId, decimal autobidPrice, decimal maximumPrice)
+        public async Task UpdateAutoBid(int userId, int productId, decimal autobidPrice, decimal maximumPrice)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             SqlConnect.Open();
@@ -253,7 +253,7 @@ namespace AuctionHouseBackend.Database
 
 
 
-        public async void ChangeStatus(int productId, Status status)
+        public async Task ChangeStatus(int productId, Status status)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             SqlConnect.Open();
