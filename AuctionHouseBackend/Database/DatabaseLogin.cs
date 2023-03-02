@@ -31,11 +31,16 @@ namespace AuctionHouseBackend.Database
             return null;
         }
 
+        /// <summary>
+        /// Creates and account
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<bool> CreateAccount(UserModel user)
         {
             UserModel userModel = await GetUser(user.Username);
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
-            SqlConnect.Open();
+            await SqlConnect.OpenAsync();
             if (userModel == null)
             {
                 string query = $"INSERT INTO Users(username, firstName, lastName, email) VALUES(@username, @firstName, " +
@@ -46,31 +51,31 @@ namespace AuctionHouseBackend.Database
                 SqlDataCommand.Parameters.AddWithValue("@lastName", user.LastName);
                 SqlDataCommand.Parameters.AddWithValue("@email", user.Email);
                 await SqlDataCommand.ExecuteScalarAsync();
-                SqlConnect.Close();
-                CreateSalt(user);
+                await SqlConnect.CloseAsync();
+                await CreateSalt(user);
                 return true;
             }
-            SqlConnect.Close();
+            await SqlConnect.CloseAsync();
             return false;
         }
 
         public async Task UpdateLogin(int id, HashModel hash)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
-            SqlConnect.Open();
+            await SqlConnect.OpenAsync();
             string query = $"UPDATE Hashes SET hash = @hash, salt = @salt WHERE id = @id";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@hash", hash.Hash);
             SqlDataCommand.Parameters.AddWithValue("@salt", hash.Salt);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
             await SqlDataCommand.ExecuteScalarAsync();
-            SqlConnect.Close();
+            await SqlConnect.CloseAsync();
         }
 
         private async Task<HashModel>? GetHash(int id)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
-            SqlConnect.Open();
+            await SqlConnect.OpenAsync();
             string query = $"SELECT * FROM Hashes WHERE id = @id";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
@@ -78,10 +83,10 @@ namespace AuctionHouseBackend.Database
             if (SqlDataReader.Read())
             {
                 HashModel hash = new HashModel(SqlDataReader["hash"].ToString(), SqlDataReader["Salt"].ToString());
-                SqlConnect.Close();
+                await SqlConnect.CloseAsync();
                 return hash;
             }
-            SqlConnect.Close();
+            await SqlConnect.CloseAsync();
             return null;
         }
 
@@ -89,14 +94,14 @@ namespace AuctionHouseBackend.Database
         {
             int id = GetUser(user.Username).Id;
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
-            SqlConnect.Open();
+            await SqlConnect.OpenAsync();
             string query = $"INSERT INTO Hashes(id, hash, salt) VALUES(@id, @hash, @salt)";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@hash", user.Hash.Hash);
             SqlDataCommand.Parameters.AddWithValue("@salt", user.Hash.Salt);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
             await SqlDataCommand.ExecuteScalarAsync();
-            SqlConnect.Close();
+            await SqlConnect.CloseAsync();
         }
     }
 }

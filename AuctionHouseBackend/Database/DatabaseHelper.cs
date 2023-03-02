@@ -47,7 +47,7 @@ namespace AuctionHouseBackend.Database
         public async Task<UserModel> GetUser(string username)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
-            SqlConnect.Open();
+            await SqlConnect.OpenAsync();
             string query = $"SELECT * FROM Users WHERE username = @username";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@username", username);
@@ -58,17 +58,17 @@ namespace AuctionHouseBackend.Database
                 user = new UserModel(SqlDataReader["firstName"].ToString(), SqlDataReader["lastName"].ToString(),
                     SqlDataReader["username"].ToString(), SqlDataReader["email"].ToString(), "");
                 user.Id = Convert.ToInt32(SqlDataReader["id"]);
-                SqlConnect.Close();
+                await SqlConnect.CloseAsync();
                 return user;
             }
-            SqlConnect.Close();
+            await SqlConnect.CloseAsync();
             return null;
         }
 
         public async Task<UserModel>? GetUser(int id)
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
-            SqlConnect.Open();
+            await SqlConnect.OpenAsync();
             string query = $"SELECT * FROM Users WHERE id = @id";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@id", id);
@@ -79,10 +79,10 @@ namespace AuctionHouseBackend.Database
                 user = new UserModel(SqlDataReader["firstName"].ToString(), SqlDataReader["lastName"].ToString(),
                     SqlDataReader["username"].ToString(), SqlDataReader["email"].ToString(), "");
                 user.Id = Convert.ToInt32(SqlDataReader["id"]);
-                SqlConnect.Close();
+                await SqlConnect.CloseAsync();
                 return user;
             }
-            SqlConnect.Close();
+            await SqlConnect.CloseAsync();
             return null;
         }
     }
