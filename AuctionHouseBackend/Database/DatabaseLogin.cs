@@ -92,7 +92,7 @@ namespace AuctionHouseBackend.Database
 
         private async Task CreateSalt(UserModel user)
         {
-            int id = GetUser(user.Username).Id;
+            int id = GetUser(user.Username).Result.Id;
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             await SqlConnect.OpenAsync();
             string query = $"INSERT INTO Hashes(id, hash, salt) VALUES(@id, @hash, @salt)";

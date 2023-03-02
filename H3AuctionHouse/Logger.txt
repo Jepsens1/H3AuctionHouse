@@ -1,1 +1,7 @@
+02-03-2023 09:12:07 ERROR Register.OnPost()One or more errors occurred. (The INSERT statement conflicted with the FOREIGN KEY constraint "FK__Hashes__id__276EDEB3". The conflict occurred in database "AuctionHouse", table "dbo.Users", column 'id'.
+The statement has been terminated.)   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at System.Threading.Tasks.Task`1.get_Result()
+   at AuctionHouseBackend.Managers.AccountManager.CreateAccount(UserModel user) in C:\Users\pjj\source\repos\H3AuctionHouse\AuctionHouseBackend\Managers\AccountManager.cs:line 41
+   at H3AuctionHouse.Pages.RegisterModel.OnPost() in C:\Users\pjj\source\repos\H3AuctionHouse\H3AuctionHouse\Pages\Register.cshtml.cs:line 48
 01-03-2023 13:16:49 ERROR BidOnProduct()One or more errors occurred. (BeginExecuteReader requires an open and available Connection. The connection's current state is closed.)
