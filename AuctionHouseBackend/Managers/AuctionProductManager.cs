@@ -84,6 +84,7 @@ namespace AuctionHouseBackend.Managers
                 {
                     return response;
                 }
+                // Check for last minute bid and extend the expirery time if someone bids within last minute
                 LastMinuteBid(product);
                 databaseAuctionProduct.SetHighestBidder(userId, product.Product.Id, amount);
                 if (autobid != null)
@@ -156,6 +157,7 @@ namespace AuctionHouseBackend.Managers
                             databaseAuctionProduct.ChangeStatus(Products[i].Product.Id, Status.EXPIRED);
                         }
                         Products[i].Product.TriggerOnStatusChanged(Products[i]);
+                        databaseAuctionProduct.RemoveAutobid(Products[i].Product.Id);
                     }
                 }
 

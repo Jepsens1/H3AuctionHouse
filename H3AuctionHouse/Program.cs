@@ -53,7 +53,7 @@ namespace H3AuctionHouse
 
         private static void Product_OnStatusChanged(object? sender, object e)
         {
-            manager.Get<SMTPEmailManager>().SendMail(((ProductModel<AuctionProductModel>)e).Owner, "subject", "body");
+            //manager.Get<SMTPEmailManager>().SendMail(((ProductModel<AuctionProductModel>)e).Owner, "subject", "body");
         }
 
         public static void Main(string[] args)
