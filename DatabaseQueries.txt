@@ -52,11 +52,16 @@ CREATE TABLE AuctionProducts
 	price decimal
 )
 
+CREATE TABLE ProductImages
+(
+	productId int FOREIGN KEY REFERENCES Product(id),
+	images varbinary(max)
+)
+
 CREATE TABLE Bids
 (
 	productId int FOREIGN KEY REFERENCES Product(id),
-	userId int FOREIGN KEY REFERENCES Users(id),
-	price decimal,
+	userId int FOREIGN KEY REFERENCES Users(id) UNIQUE,
 	autobidPrice decimal,
 	maximumPrice decimal
 )

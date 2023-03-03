@@ -15,7 +15,7 @@ namespace AuctionHouseBackend.Database
     /// This class handles the auction product database calls
     /// Every database call should have a try/catch but some i haven't added yet
     /// </summary>
-    public class DatabaseAuctionProduct : DatabaseHelper
+    public class DatabaseAuctionProduct : DatabaseProduct
     {
         public DatabaseAuctionProduct(string connectionString) : base(connectionString)
         {
@@ -44,6 +44,7 @@ namespace AuctionHouseBackend.Database
             {
                 model.HighestBidder = bidder;
             }
+            productModel.Product.Imgs = GetImages(id).Result;
             return productModel;
         }
 

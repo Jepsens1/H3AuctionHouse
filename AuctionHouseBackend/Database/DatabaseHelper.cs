@@ -15,11 +15,7 @@ namespace AuctionHouseBackend.Database
     /// </summary>
     public class DatabaseHelper
     {
-        public string ConnectionString { get; }
-        //public SqlConnection SqlConnect { get; protected set; }
-        //public SqlCommand SqlDataCommand { get; protected set; }
-        //public SqlDataReader SqlDataReader { get; protected set; }
-        //public SqlDataAdapter SqlDataAdapter { get; protected set; }
+        protected string ConnectionString { get; }
 
         public DatabaseHelper(string connectionString) 
         { 
@@ -27,22 +23,6 @@ namespace AuctionHouseBackend.Database
             
         }
 
-        //protected int GetPrimaryTableId(string tableName, string idName)
-        //{
-        //    OpenConnection();
-        //    string query = $"SELECT * FROM {tableName}";
-        //    SqlDataCommand = new SqlCommand(query, SqlConnect);
-        //    SqlDataReader = SqlDataCommand.ExecuteReader();
-        //    int id = -1;
-        //    if (SqlDataReader.Read())
-        //    {
-        //        id = Convert.ToInt32(SqlDataReader[idName]);
-        //        CloseConnection();
-        //        return id;
-        //    }
-        //    CloseConnection();
-        //    return id;
-        //}
 
         public async Task<UserModel> GetUser(string username)
         {
