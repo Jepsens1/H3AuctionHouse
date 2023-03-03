@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace H3AuctionHouse.Pages
 {
@@ -26,12 +27,15 @@ namespace H3AuctionHouse.Pages
         public decimal AutoBidValue { get; set; }
         [BindProperty]
         public decimal MaxAutobidValue { get; set; }
+
+        public string Imagebase64 { get; set; }
         public void OnGet(int id)
         {
             try
             {
-                //Gets items with the id from our details page
+                //Gets items with the id we got from redirect to this page, which requires an id
                 Item = Program.manager.Get<AuctionProductManager>().GetProduct(id);
+                Imagebase64 = Convert.ToBase64String(Item.Product.Imgs[0]);
                 if(Item == null)
                 {
                     Msg = "Could not get Item";

@@ -28,6 +28,8 @@ namespace AuctionHouseBackend.Models
         public DateTime ExpireryDate { get; set; }
         public AuctionBidderModel HighestBidder { get; set; }
 
+        public List<byte[]> Imgs { get; set; }
+
         public AuctionProductModel(int id, string name, string description, Category category, Status status, DateTime expireryDate)
         {
             Id = id;
@@ -38,13 +40,14 @@ namespace AuctionHouseBackend.Models
             ExpireryDate = expireryDate;
         }
 
-        public AuctionProductModel(string name, string description, Category category, Status status, DateTime expireryDate)
+        public AuctionProductModel(string name, string description, Category category, Status status, DateTime expireryDate, byte[] image)
         {
             Name = name;
             Description = description;
             Category = category;
             Status = status;
             ExpireryDate = expireryDate;
+            Imgs = new List<byte[]> { image };
         }
 
         public override string ToString()

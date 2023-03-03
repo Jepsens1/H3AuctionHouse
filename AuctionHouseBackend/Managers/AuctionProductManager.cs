@@ -93,6 +93,7 @@ namespace AuctionHouseBackend.Managers
                 }
                 product.Product.HighestBidder.Price = amount;
                 product.Product.HighestBidder.User = databaseAuctionProduct.GetUser(userId).Result;
+                UpdateProduct(product);
                 product.Product.HighestBidder.TriggerOnPriceChanged(product);
             }
             catch (Exception ex)
@@ -101,6 +102,18 @@ namespace AuctionHouseBackend.Managers
                 return ResponseCode.UnknownError;
             }
             return ResponseCode.NoError;
+        }
+
+        private void UpdateProduct(ProductModel<AuctionProductModel> product)
+        {
+            for (int i = 0; i < Products.Count; i++)
+            {
+                if (Products[i].Product.Id == product.Product.Id)
+                {
+                    Products[i] = product;
+                    return;
+                }
+            }
         }
 
         private void LastMinuteBid(ProductModel<AuctionProductModel> product)

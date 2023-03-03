@@ -15,10 +15,14 @@ namespace AuctionHouseBackend.Interfaces
     /// </summary>
     public interface IProduct
     {
+        public event EventHandler<object> OnStatusChanged;
         public int Id { get; }
         public string Name { get; }
         public string Description { get; }
         public Category Category { get; }
         public Status Status { get; }
+        public List<byte[]> Imgs { get; }
+
+        public void TriggerOnStatusChanged(object product);
     }
 }
