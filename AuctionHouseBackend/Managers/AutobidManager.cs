@@ -47,9 +47,22 @@ namespace AuctionHouseBackend.Managers
         public void UpdateAutobid(AutobidModel autobid)
         {
             databaseAuctionProduct.UpdateAutoBid(autobid.UserId, autobid.ProductId, autobid.AutobidPrice, autobid.AutobidMax);
+            UpdateAutobidArr(autobid);
         }
 
-        public void Autobid(AuctionProductManager productManager)
+        private void UpdateAutobidArr(AutobidModel autobid)
+        {
+            for (int i = 0; i < Autobids.Count; i++)
+            {
+                if (Autobids[i].ProductId == autobid.ProductId)
+                {
+                    Autobids[i] = autobid;
+                    return;
+                }
+            }
+        }
+
+        private void Autobid(AuctionProductManager productManager)
         {
             while (true)
             {

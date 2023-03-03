@@ -19,11 +19,12 @@ namespace AuctionHouseBackend.Managers
             {
                 Port = 587,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("I got the mail", "i got the password"),
+                // email should be replaced with the email sender and with its password
+                Credentials = new NetworkCredential("email", "password"),
                 EnableSsl = true,
             };
-
-            smtpClient.Send("i got the mail", to.Email, subject, body);
+            // email should be replaced with the email sender
+            smtpClient.Send("email", to.Email, subject, body);
         }
     }
 }
