@@ -138,6 +138,7 @@ namespace AuctionHouseBackend.Database
                 SqlDataCommand.Parameters.AddWithValue("@productExpireDate", sqlFormattedDate);
                 await SqlDataCommand.ExecuteNonQueryAsync();
                 await SqlConnect.CloseAsync();
+                await InsertImg(product.Product.Imgs[0], productId);
 
             }
             catch (Exception ex)

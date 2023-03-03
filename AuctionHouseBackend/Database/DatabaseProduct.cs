@@ -27,9 +27,9 @@ namespace AuctionHouseBackend.Database
             await SqlConnect.CloseAsync();
         }
 
-        public async Task<List<string>> GetImages(int productId)
+        public async Task<List<byte[]>> GetImages(int productId)
         {
-            List<string> images = new List<string>();
+            List<byte[]> images = new List<byte[]>();
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             await SqlConnect.OpenAsync();
             string query = $"SELECT * FROM ProductImages WHERE productId = @productId";
@@ -38,7 +38,7 @@ namespace AuctionHouseBackend.Database
             SqlDataReader SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             while (SqlDataReader.Read())
             {
-                images.Add(SqlDataReader["images"].ToString());
+                images.Add(Encoding.ASCII.GetBytes(SqlDataReader["images"].ToString()));
             }
             await SqlConnect.CloseAsync();
             return images;

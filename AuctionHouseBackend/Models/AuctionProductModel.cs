@@ -28,7 +28,7 @@ namespace AuctionHouseBackend.Models
         public DateTime ExpireryDate { get; set; }
         public AuctionBidderModel HighestBidder { get; set; }
 
-        public List<string> Imgs { get; set; }
+        public List<byte[]> Imgs { get; set; }
 
         public AuctionProductModel(int id, string name, string description, Category category, Status status, DateTime expireryDate)
         {

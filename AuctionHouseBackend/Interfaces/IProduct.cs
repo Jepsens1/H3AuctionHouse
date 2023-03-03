@@ -21,7 +21,7 @@ namespace AuctionHouseBackend.Interfaces
         public string Description { get; }
         public Category Category { get; }
         public Status Status { get; }
-        public List<string> Imgs { get; }
+        public List<byte[]> Imgs { get; }
 
         public void TriggerOnStatusChanged(object product);
     }

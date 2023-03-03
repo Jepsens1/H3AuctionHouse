@@ -24,7 +24,6 @@ namespace AuctionHouseBackend.Managers
             Add<AccountManager>(new AccountManager(new DatabaseLogin(constring)));
             Add<SMTPEmailManager>(new SMTPEmailManager());
             Add<AutobidManager>(new AutobidManager(databaseAuctionProduct, Get<AuctionProductManager>()));
-            Add<ProductManager>(new ProductManager(new DatabaseProduct(constring)));
         }
 
         /// <summary>
