@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -19,10 +20,16 @@ namespace AuctionHouseBackend.Database
         {
             SqlConnection SqlConnect = new SqlConnection(ConnectionString);
             await SqlConnect.OpenAsync();
-            string query = $"INSERT INTO ProductImages(productId, images) VALUES(@productId, (SELECT * FROM OPENROWSET(BULK @img, SINGLE_BLOB) as image))";
+            string query = $"INSERT INTO ProductImages(productId, images) VALUES(@productId, @img)";
             SqlCommand SqlDataCommand = new SqlCommand(query, SqlConnect);
             SqlDataCommand.Parameters.AddWithValue("@productId", productId);
-            SqlDataCommand.Parameters.AddWithValue("@img", img);
+            var byteParam = new SqlParameter("@img", SqlDbType.VarBinary)
+            {
+                Direction = ParameterDirection.Input,
+                Size = img.Length,
+                Value = img
+            };
+            SqlDataCommand.Parameters.Add(byteParam);
             await SqlDataCommand.ExecuteReaderAsync();
             await SqlConnect.CloseAsync();
         }
@@ -38,7 +45,7 @@ namespace AuctionHouseBackend.Database
             SqlDataReader SqlDataReader = await SqlDataCommand.ExecuteReaderAsync();
             while (SqlDataReader.Read())
             {
-                images.Add(Encoding.ASCII.GetBytes(SqlDataReader["images"].ToString()));
+                images.Add((byte[])SqlDataReader["images"]);
             }
             await SqlConnect.CloseAsync();
             return images;

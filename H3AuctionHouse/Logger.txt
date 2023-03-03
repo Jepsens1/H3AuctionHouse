@@ -1,1 +1,1 @@
-03-03-2023 08:48:28 ERROR AddAll() One or more errors occurred. (Invalid object name 'ProductImages'.)
+03-03-2023 09:10:34 ERROR Create() Incorrect syntax near the keyword 'as'.

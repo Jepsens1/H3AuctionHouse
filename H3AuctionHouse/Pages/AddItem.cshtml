@@ -4,7 +4,7 @@
     ViewData["Title"] = "Add Item";
     <h1>@ViewData["Title"]</h1>
     <div class="row">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <h2>Add an item to auction</h2>
             <hr>
             <div asp-validation-summary="All"></div>
@@ -17,6 +17,9 @@
                 <label asp-for="@Model.Description"></label>
                 @*Value will be binded to our Description property*@
                 <input asp-for="@Model.Description">
+            </div>
+            <div>
+                <input type="file" accept="image/*" asp-for="@Model.UploadFile" />
             </div>
             <div>
                 @*Value will be binded to our ExipireDate Datetime property*@

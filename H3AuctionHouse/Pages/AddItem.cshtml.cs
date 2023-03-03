@@ -8,6 +8,10 @@ using AuctionHouseBackend.Interfaces;
 using AuctionHouseBackend;
 using AuctionHouseBackend.Managers;
 using H3AuctionHouse.Authorization;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Text;
 
 namespace H3AuctionHouse.Pages
 {
@@ -39,9 +43,38 @@ namespace H3AuctionHouse.Pages
         //By default the value is first value of our dropdown menu
         public string SelectedCategory { get; set; }
 
+        //Used for uploading images
+        [BindProperty]
+        public IFormFile UploadFile { get; set; }
+
+        //Used for saving image to database
+        public byte[] ImageInBytes { get; set; }
+
 
         public void OnGet()
         {
+        }
+
+        /// <summary>
+        /// Converts UploadFile property to byte array
+        /// </summary>
+        /// <returns></returns>
+        private byte[] ConvertImageToBytes()
+        {
+            byte[] imageresized = { };
+            if (UploadFile.ContentType.Contains("image"))
+            {
+                Image image = Image.FromStream(UploadFile.OpenReadStream());
+                //Needs to resize image to lower res, otherwise application will crash due to large size
+                Bitmap resized = new Bitmap(image, new Size(512, 512));
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    resized.Save(ms, ImageFormat.Jpeg);
+                    imageresized = ms.ToArray();
+                }
+                return imageresized;
+            }
+            return imageresized;
         }
         /// <summary>
         /// Method is called when user clicks submit button
@@ -53,25 +86,26 @@ namespace H3AuctionHouse.Pages
             try
             {
                 //Checks to see if user has filled all input fields
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return Page();
                 }
                 bool Iscreated = false;
                 //Gets user by session
                 UserModel user = HttpContext.Session.GetObjectFromJson<UserModel>("user");
-                if(user== null)
+                if (user == null)
                 {
                     throw new Exception("Session user is null");
                 }
                 //Convets the SelectedCategory string to Enum
                 Category category = (Category)Enum.Parse(typeof(Category), SelectedCategory);
                 //Checks to see if ProductName and Description is not empty or null
-                if(!string.IsNullOrEmpty(ProductName) && !string.IsNullOrEmpty(Description))
+                if (!string.IsNullOrEmpty(ProductName) && !string.IsNullOrEmpty(Description))
                 {
+                    ImageInBytes = ConvertImageToBytes();
                     //Gets true or false on if item is added to database
-                     Iscreated = Program.manager.Get<AuctionProductManager>().Create(new ProductModel<AuctionProductModel>(new AuctionProductModel(ProductName, Description, category
-                    , Status.AVAILABLE, ExpireDate), user));
+                    Iscreated = Program.manager.Get<AuctionProductManager>().Create(new ProductModel<AuctionProductModel>(new AuctionProductModel(ProductName, Description, category
+                    , Status.AVAILABLE, ExpireDate, ImageInBytes), user));
 
                 }
                 if (!Iscreated)
@@ -88,7 +122,7 @@ namespace H3AuctionHouse.Pages
                 Logger.AddLog(AuctionHouseBackend.LogLevel.ERROR, "AddItem.OnPost()" + e.Message + e.StackTrace);
                 return Page();
             }
-           
+
         }
     }
 }

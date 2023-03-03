@@ -38,6 +38,7 @@
                 <th>Category</th>
                 <th>Status</th>
                 <th>Highest Bid</th>
+                <th>Image</th>
             </tr>
         </thead>
         <tbody>
@@ -61,6 +62,11 @@
                 <td>
                     @Html.DisplayFor(modelitem => Model.Item.Product.HighestBidder)
                 </td>
+                <td>
+
+                    <img src="data:image/jpeg;base64, @Model.Imagebase64" height="256", width="256">
+                </td>
+
             </tr>
         </tbody>
     </table>
